@@ -54,14 +54,14 @@ class QuizController extends Controller {
                         $correctOption = $data->options->firstWhere('is_correct', 1);
                         return $correctOption ? $correctOption->option_text : null;
                     })
-                    ->addColumn('action', function ($data) {
-                        $html = '<div class="btn-group btn-group-sm" role="group" aria-label="Basic example">';
-                        $html .= '<a href="#" class="btn btn-sm btn-success"><i class="bx bxs-edit"></i></a>';
-                        $html .= '<a href="#" onclick="showDeleteConfirm(' . $data->id . ')" type="button" class="btn btn-danger btn-sm text-white" title="Delete" readonly><i class="bx bxs-trash"></i></a>';
-                        $html .= '</div>';
-                        return $html;
-                    })
-                    ->rawColumns(['action', 'is_correct', 'category'])
+                    // ->addColumn('action', function ($data) {
+                    //     $html = '<div class="btn-group btn-group-sm" role="group" aria-label="Basic example">';
+                    //     $html .= '<a href="#" class="btn btn-sm btn-success"><i class="bx bxs-edit"></i></a>';
+                    //     $html .= '<a href="#" onclick="showDeleteConfirm(' . $data->id . ')" type="button" class="btn btn-danger btn-sm text-white" title="Delete" readonly><i class="bx bxs-trash"></i></a>';
+                    //     $html .= '</div>';
+                    //     return $html;
+                    // })
+                    ->rawColumns([ 'is_correct', 'category'])
                     ->make(true);
             }
             return view('backend.layout.quizzes.index', compact('courses', 'quizzes', 'categories'));
@@ -166,17 +166,10 @@ class QuizController extends Controller {
              $quiz = Quiz::findOrFail($id);
              $quiz->update($quizData);
          } 
-        // else {
-        //      $quiz = Quiz::create($quizData);
-        //  }
-
-        // if (isset($quizData)) {
-        //     $quiz = Quiz::create($quizData);
-        // } 
         else {
             return redirect()->back()->with('t-error','Id not found.');
         }
-        
+
          $quiz->questions()->sync($request->input('question_ids'));
      
         return redirect()->back()->with('t-success', 'successful create quiz');
@@ -189,16 +182,7 @@ class QuizController extends Controller {
      * @param $id
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      */
-    public function edit2( $id ) {
-        if ( User::find( auth()->user()->id )->hasPermissionTo( 'edit quiz' ) ) {
-            $quiz = Quiz::with( 'quistions' )->where( 'id', $id )->first();
-            $courses = Course::all();
-            $modules = CourseModule::all();
-            return view( 'backend.layout.quiz.update', compact( 'quiz', 'courses', 'modules' ) );
-        }
-        return redirect()->back();
-    }
-
+   
    
     /**
      * Change Data the specified resource from storage.

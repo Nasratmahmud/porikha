@@ -161,7 +161,9 @@
         //     })
         // }
     </script>
+    
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
     <script>
         $(document).ready(function() {
             $('.js-example-basic-multiple').select2();
@@ -227,7 +229,7 @@
                         return;
                     }
                         $.ajax({
-                            url: "{{ route('quizzes.update',':id') }}",  
+                            url: "{{ route('quizzes.update',$quizzes->id) }}",  
                             method: "POST",
                             data: {
                                 quiz_title: quizTitle,
@@ -265,92 +267,4 @@
         });
     </script>
 
-    {{-- <script>
-        $(document).ready(function() {
-            $('.js-example-basic-single').select2({
-                dropdownParent: $('#category')
-            });
-
-            $(".js-example-theme-single").select2({
-                theme: "classic",
-                minimumResultsForSearch: Infinity
-            });
-        });
-    </script> --}}
-
-    {{-- <script>
-                    $('#select-all').on('click', function() {
-                    var isChecked = this.checked;
-                        $('#data-table input.select-row').each(function() {
-                            this.checked = isChecked;
-                        });
-                    });
-
-                    // Handle row checkbox selection
-                    $('#data-table').on('change', 'input.select-row', function() {
-                        var allChecked = $('#data-table input.select-row').length === $('#data-table input.select-row:checked').length;
-                        $('#select-all').prop('checked', allChecked);
-                    });
-
-
-                    $('#submitSelected').on('click', function() {
-                    // Get the selected course
-                    var selectedQuiz = $('#quiz-dropdown').val();
-                    var quizTime = $('#quizTime').val();
-                    var selectedCourse = $('#course-dropdown').val();
-
-                    // Get the selected row IDs
-                    var selectedRows = [];
-                    $('#data-table input.select-row:checked').each(function() {
-                        selectedRows.push($(this).data('id')); // Get the `data-id` of the checked checkbox
-                    });
-
-                    if (selectedCourse === "") {
-                        alert("Please select a course.");
-                        return;
-                    }
-
-                    if (quizTime === "") {
-                        alert("Please give the quiz time to complete.");
-                        return;
-                    }
-
-                    if (selectedRows.length === 0) {
-                        alert("Please select at least one question.");
-                        return;
-                    }
-
-                    // Send the data to the server via AJAX
-                    $.ajax({
-                        url: "{{ route('quizzes.store') }}",  // Replace with your route
-                        method: "POST",
-                        data: {
-                            time: quizTime,
-                            quiz_id: selectedQuiz,
-                            course_id: selectedCourse,
-                            question_ids: selectedRows,
-                            _token: $('meta[name="csrf-token"]').attr('content')  // CSRF token for security
-                        },
-                        success: function(response) {
-                            // Handle success (e.g., show a success message)
-                            alert("Data submitted successfully.");
-                            console.log(response);
-                        },
-                        error: function(xhr, status, error) {
-                              // If validation errors are returned from Laravel, show them to the user
-                            if (xhr.status === 422) {
-                                var errors = xhr.responseJSON.errors;
-                                var errorMessages = '';
-                                $.each(errors, function(field, messages) {
-                                    errorMessages += messages.join(', ') + '\n';
-                                });
-                                alert('Validation errors: \n' + errorMessages);
-                            } else {
-                                alert("An error occurred while submitting the data.");
-                            }
-                            console.log(xhr.responseText); // Log the response for further investigation
-                        }
-                    });
-                });
-    </script> --}}
 @endpush

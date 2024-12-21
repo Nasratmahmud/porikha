@@ -84,7 +84,7 @@
                                                 <th>Question Title</th>
                                                 <th>Question Category</th>
                                                 <th>Correct Answer</th>
-                                                <th>Action</th>
+                                                {{-- <th>Action</th> --}}
                                             </tr>
                                         </thead>
                                         <tbody class="align-middle">
@@ -193,7 +193,7 @@
                 { data: 'question_text', name: 'question_text' },
                 { data: 'category', name: 'category' },
                 { data: 'is_correct', name: 'is_correct' },
-                { data: 'action', name: 'action', orderable: false, searchable: false },
+                // { data: 'action', name: 'action', orderable: false, searchable: false },
             ]
         });
 
