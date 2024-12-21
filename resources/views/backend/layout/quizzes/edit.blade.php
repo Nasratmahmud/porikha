@@ -1,221 +1,356 @@
 @extends('backend.app')
 
-<!-- Start:Title -->
-@section('title', 'Add New Question')
-<!-- End:Title -->
+<!-- Title -->
+@section('title', 'List of Quiz')
+
 @push('style')
-    {{-- font awesome cdn --}}
-    <link rel="stylesheet"
-          href="{{ asset('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css') }}"/>
-    {{-- Dropify Css cdn --}}
-    <link rel="stylesheet"
-          href="{{ asset('https://cdnjs.cloudflare.com/ajax/libs/Dropify/0.2.2/css/dropify.min.css') }}"/>
 
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" rel="stylesheet">
-    <style type="text/css">
-        /* dropify css  */
-        .dropify-wrapper .dropify-message p {
-            font-size: initial;
-        }
+    .dataTables_filter 
+    {
+        text-align: right;
+    }
 
-        /* editor css  */
-        .ck-editor__editable[role="textbox"] {
-            min-height: 150px;
-        }
-    </style>
+    .dataTables_filter input 
+    {
+        text-align: right;
+    }
 @endpush
 
-<!-- Start:Content -->
+{{-- Main Content --}}
 @section('content')
     <div class="app-content-area">
         <div class="container-fluid">
             <!-- row -->
             <div class="row mt-5">
                 <div class="col-12">
-                    <div class="write-journal-title">
-                        <h2>Create a Course</h2>
-                        <a class="bg-transparent" href="{{ route('questions.index') }}">
-                        </a>
+                    <div class="text-end d-flex mx-3 justify-content-between align-items-center mb-4">
+                        {{-- <h3>Categories</h3>
+                            <a class="btn btn-primary mb-3"  href="{{route('questions.create')}}">
+                                Add Question
+                            </a> --}}
                     </div>
-                    <!-- card -->
-                    <div class="card mb-4 mx-5">
-                        <!-- card body -->
-                        <div class="card-body">
-                        
-                            {{-- <form class="needs-validation" novalidate action="{{ route('questions.update',['id'=>$question->id]) }}" method="POST" enctype="multipart/form-data">
-                                @csrf
-                                @method('patch')
-                                <div class="row mb-3">
-                                    <div class="col-md-6">
-                                        <label class="form-label" for="question_category">Select Question Category</label>
-                                        <select name="category_id" class="form-select {{ $errors->has('question_category') ? 'is-invalid' : '' }}" required>
-                                            <option value="">Choose a Category</option>
-                                            @foreach ($categories as $category)
-                                                <option value="{{ $category->id }}" {{$category->id == $question->category_id ? 'selected' : ''}}>{{ $category->name }}</option>
+                    <div class="mb-6 card mx-3">
+                        <div class="tab-content p-5" id="pills-tabContent-table">
+                            <div class="tab-pane tab-example-design fade show active" id="pills-table-design" role="tabpanel" aria-labelledby="pills-table-design-tab">
+                                <div class="row">
+                                    <div class="form-group mb-3 col-3">
+                                        <div class="">
+                                            <label class="form-label" for="quizTitle">Quiz Title</label>
+                                            <input type="text" name="quizTitle" id="quiz-title"
+                                                class="form-control {{ $errors->has('quizTitle') ? 'is-invalid' : '' }}"
+                                                value="{{$quizzes->title }}" required>
+                                            @if ($errors->has('quizTitle'))
+                                                <div class="invalid-feedback">
+                                                    {{ $errors->first('quizTitle') }}
+                                                </div>
+                                            @endif
+                                        </div>
+                                        {{-- <label for="quiz-dropdown" class="mb-3 form-label">Quiz Title</label>
+                                        <select id="quiz-dropdown" name="quizTitle" class="form-control">
+                                            <option value="" hidden>Select One Quiz</option>
+                                            @foreach ($quizzes as $quiz)
+                                                <option value="{{$quiz->id}}">{{$quiz->title}}</option>
+                                            @endforeach
+                                        </select> --}}
+                                    </div>
+                                    <div class="form-group mb-3 col-3">
+                                        <label for="quizTime" class="mb-3 form-label">Quiz Time</label>
+                                        <input type="number" name="quizTime" id="quizTime" class="form-control" placeholder="Only Minutes" value="{{$quizzes->total_time }}">
+                                    </div>
+                                    <div class="form-group mb-3 col-3">
+                                        <label for="course-dropdown" class="mb-3 form-label">Course Title</label>
+                                        <select id="course-dropdown" name="quizCourse" class="form-control">
+                                            <option value="" hidden>Select One Course</option>
+                                            @foreach ($courses as $course)
+                                            <option value="{{ $course->id }}" {{ $quizzes->course_id == $course->id ? 'selected' : '' }}>{{ $course->course_title }} </option>
                                             @endforeach
                                         </select>
-                                        @if ($errors->has('question_category'))
-                                            <div class="invalid-feedback">
-                                                {{ $errors->first('question_category') }}
-                                            </div>
-                                        @endif
                                     </div>
+                                    {{-- <div class="form-group mb-3 col-3" >
+                                        <label for="category-dropdown" class="mb-3 form-label">Category Search</label>
+                                        <select class="js-example-basic-multiple form-control" id="category-dropdown" name="quizCategory[]" multiple>
+                                            @foreach ($categories as $category)
+                                                <option value="{{ $category->id }}">{{ $category->name }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div> --}}
                                 </div>
-                                <div class="row mb-3">
-                                    <div class="col-md-6">
-                                        <label class="form-label" for="question_title">Question</label>
-                                        <input type="text" name="question_title"
-                                            class="form-control {{ $errors->has('question_title') ? 'is-invalid' : '' }}"
-                                            value="{{ $question->question_text }}" required>
-                                        @if ($errors->has('question_title'))
-                                            <div class="invalid-feedback">
-                                                {{ $errors->first('question_title') }}
-                                            </div>
-                                        @endif
-                                    </div>
+                                <div class="table-responsive">
+                                    <table id="data-table" class="table table-striped text-center w-100 display responsive nowrap" cellspacing="0" width="100%">
+                                        <thead>
+                                            <tr class="table-dark">
+                                                <th><input type="checkbox" id="select-all"></th>
+                                                {{-- <td>
+                                                    <input type="checkbox" class="select-row" data-id="{{ $question->id }}" 
+                                                        @if(in_array($question->id, $quiz->questions->pluck('id')->toArray())) checked @endif>
+                                                </td> --}}
+                                                <th>SL#</th>
+                                                <th>Question Title</th>
+                                                <th>Question Category</th>
+                                                <th>Correct Answer</th>
+                                                {{-- <th>Action</th> --}}
+                                            </tr>
+                                        </thead>
+                                        <tbody class="align-middle">
+                                        </tbody>
+                                    </table>
                                 </div>
-                                <div class="row mb-3">
-                                    <div class="col-md-5">
-                                        <label class="form-label" for="options">Options</label>
-                                        @foreach ($question->options as $index => $option)
-                                            <div class="row mb-3">
-                                                <div class="col-md-6">
-                                                <input type="text" name="options[{{ $index }}][option_text]" value="{{ $option->option_text }}" class="form-control @error('options.' . $index . '.option_text') is-invalid @enderror" required>
-                                                <input type="hidden" name="options[{{ $index }}][id]" value="{{ $option->id }}"> 
-                                                    @if ($errors->has('options.' . $index . '.option_text'))
-                                                        <div class="invalid-feedback">
-                                                            {{ $errors->first('options.' . $index . '.option_text') }}
-                                                        </div>
-                                                    @endif
-                                                </div>
-                                            </div>
-                                        @endforeach
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label class="form-label">Is_Correct</label>
-                                        @foreach ($question->options as $index => $option)
-                                            <div class="row mb-3">
-                                                <div class="col-md-6">
-                                                    <div class="mt-2">
-                                                        <div class="form-check">
-                                                              <input type="radio" name="corrects" value="{{ $index }}" {{ $option->is_correct ? 'checked' : '' }}>
-                                                        </div>
-                                                    </div>
-                                                    @if ($errors->has('correct.' . $index . '.is_correct'))
-                                                        <div class="invalid-feedback">
-                                                            {{ $errors->first('correct.' . $index . '.is_correct') }}
-                                                        </div>
-                                                    @endif
-                                                </div>
-                                            </div>
-                                        @endforeach
-                                    </div>
-                                </div>
-                                <div class="row mb-3">
-                                    <div class="col-md-6">
-                                        <label class="form-label" for="note">Additional Notes</label>
-                                        <textarea name="note" class="form-control {{ $errors->has('note') ? 'is-invalid' : '' }}" rows="4" placeholder="Enter any additional notes here...">{{$question->note}}</textarea>
-                                        @if ($errors->has('note'))
-                                            <div class="invalid-feedback">
-                                                {{ $errors->first('note') }}
-                                            </div>
-                                        @endif
-                                    </div>
-                                </div>
-                                <hr>
-                                
-                                <div class="col-12 mt-3">
-                                    <button type="submit" class="btn btn-success text-white w-auto">Update</button>
-                                    <a href="{{ route('questions.create') }}" class="btn btn-danger text-white w-auto">Cancel</a>
-                                </div>
-                            </form> --}}
-                            <form method="POST" action="{{ route('questions.update', $question->id) }}">
-                                @csrf
-                              
-                        
-                                <div class="form-group col-md-6  mb-3">
-                                    <label for="category_id" class="form-label">Category</label>
-                                    <select name="category_id" id="category_id" class="form-control @error('category_id') is-invalid @enderror">
-                                        @foreach ($categories as $category)
-                                            <option value="{{ $category->id }}" {{ $category->id == $question->category_id ? 'selected' : '' }}>
-                                                {{ $category->name }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                    @error('category_id')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                </div>
-                        
-                                <div class="form-group col-md-6  mb-3">
-                                    <label for="question_title" class="form-label">Question</label>
-                                    <input type="text" name="question_title" id="question_title" class="form-control @error('question_title') is-invalid @enderror" value="{{ old('question_title', $question->question_text) }}">
-                                    @error('question_title')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                </div>
-                        
-                                <div class="form-group  col-md-6 mb-3 ">
-                                    <label class="col-md-9 form-label">Options</label>
-                                    {{-- <label class="form-label ">Correct/Incorrect</label> --}}
-                                    <div class="options-container">
-                                        @foreach ($question->options as $index => $option)
-                                            <div class="option d-flex align-items-center mb-3 col-md-11">
-                                                <!-- Option Text Input -->
-                                                <input type="text" 
-                                                       name="options[{{ $index }}][option_text]" 
-                                                       value="{{ $option->option_text }}" 
-                                                       class="form-control @error('options.' . $index . '.option_text') is-invalid @enderror" 
-                                                       required
-                                                       style="flex: 1;">
-                                                
-                                                <input type="hidden" name="options[{{ $index }}][id]" value="{{ $option->id }}">
-                                               
-                                                <div class="form-check ml-3 m-3 ">
-                                                    <input type="radio" 
-                                                           name="corrects" 
-                                                           value="{{ $index }}" 
-                                                           {{ $option->is_correct ? 'checked' : '' }} 
-                                                           class="form-check-input">
-                                                    {{-- <label class="form-check-label">Is Correct</label> --}}
-                                                </div>
-                                    
-                                                @error('options.' . $index . '.option_text')
-                                                    <div class="invalid-feedback">{{ $message }}</div>
-                                                @enderror
-                                            </div>
-                                        @endforeach
-                                    </div>
-                                    
-                                    
-                                </div>
-                                <div class="form-group col-md-6  mb-3">
-                                    <label for="note" class="form-label">Note</label>
-                                    <textarea name="note" id="note" class="form-control @error('note') is-invalid @enderror">{{ old('note', $question->note) }}</textarea>
-                                    @error('note')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                </div>
-                        
-                                <div class="col-12 mt-3">
-                                    <button type="submit" class="btn btn-success text-white w-auto">Update</button>
-                                    <a href="{{ route('questions.create') }}" class="btn btn-danger text-white w-auto">Cancel</a>
-                                </div>
-                            </form>
+                                <button id="submitSelected" class="btn btn-primary">Update Quiz</button>
+                            </div>
                         </div>
                     </div>
                 </div>
-
             </div>
         </div>
     </div>
 @endsection
-<!-- Start:Script -->
+{{-- Add Script --}}
 @push('script')
-    {{-- Dropify Cdn --}}
-    <script src="{{ asset('https://cdnjs.cloudflare.com/ajax/libs/Dropify/0.2.2/js/dropify.min.js') }}"></script>
-    <script src="{{ asset('backend/js/form-validation.js') }}"></script>
-    {{-- Editor Cdn  --}}
-    <script src="{{ asset('https://cdn.ckeditor.com/ckeditor5/35.1.0/classic/ckeditor.js') }}"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <!-- sweetalert -->
+    <script type="text/javascript" src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"
+        type="text/javascript"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/1.10.22/js/dataTables.bootstrap4.min.js"
+        type="text/javascript"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.6.5/js/dataTables.buttons.min.js"
+        type="text/javascript"></script>
+    <script>
+        // delete Confirm
+        // function showDeleteConfirm(id) {
+        //     event.preventDefault();
+        //     swal({
+        //         title: `Are you sure you want to delete this record?`,
+        //         text: "If you delete this, it will be gone forever.",
+        //         buttons: true,
+        //         dangerMode: true,
+        //     }).then((willDelete) => {
+        //         if (willDelete) {
+        //             deleteItem(id);
+        //         }
+        //     });
+        // };
+
+        // Delete Button
+        // function deleteItem(id) {
+        //     var url = '{{ route("questions.destroy", ':id') }}';
+        //     $.ajax({
+        //         type: "POST",
+        //         url: url.replace(':id', id),
+        //         success: function(resp) {
+        //             // Reloade DataTable
+        //             $('#data-table').DataTable().ajax.reload();
+        //             if (resp.success === true) {
+        //                 setTimeout(function() {
+        //                     location.reload(); // Reload the page after 1.5 seconds
+        //                 }, 1500);
+
+        //                 // show toast message
+        //                 toastr.success(resp.message);
+                        
+
+        //             } else if (resp.errors) {
+        //                 toastr.error(resp.errors[0]);
+        //             } else {
+        //                 toastr.error(resp.message);
+        //             }
+        //         }, // success end
+        //         error: function(error) {
+        //             // location.reload();
+        //         } // Error
+        //     })
+        // }
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('.js-example-basic-multiple').select2();
+        });
+    </script>
+
+
+    <script>
+        $(document).ready(function(id) {
+        var selectedQuestions = @json($selectedQuestions);
+        var dTable = $('#data-table').DataTable({
+            order: [],
+            processing: true,
+            responsive: true,
+            serverSide: true,
+            ajax: {
+                url: '{{ route("quizzes.edit", $quizzes->id) }}', 
+                type: "GET",
+                data: function(d) {
+                            var selectedCategories = $('#category-dropdown').val();
+                            d.category = selectedCategories;
+                        }
+            },
+            columns: [
+                {
+                    searchable: false,
+                    data: null,
+                    orderable: false,
+                    render: function(data, type, row) {
+                        var isChecked = selectedQuestions.includes(row.id) ? 'checked' : '';
+                        return `
+                            <td>
+                                <input type="checkbox" class="select-row" data-id="${row.id}" ${isChecked}>
+                            </td>
+                        `;
+                    }
+                },
+                { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
+                { data: 'question_text', name: 'question_text' },
+                { data: 'category', name: 'category' },
+                { data: 'is_correct', name: 'is_correct' },
+                // { data: 'action', name: 'action', orderable: false, searchable: false },
+            ]
+        });
+        
+        $('#select-all').on('click', function() {
+            var isChecked = this.checked;
+            $('#data-table input.select-row').each(function() {
+                this.checked = isChecked;
+            });
+        });
+
+        $('#submitSelected').on('click', function() {
+            var quizTitle = $('#quiz-title').val();
+            var quizTime = $('#quizTime').val(); 
+            var selectedCourse = $('#course-dropdown').val();
+            var selectedRows = [];
+                $('#data-table input.select-row:checked').each(function() {
+                        selectedRows.push($(this).data('id')); 
+                    });
+                    if (!quizTitle || !selectedCourse || !quizTime || selectedRows.length === 0) {
+                        alert("Please fill in all fields and select at least one question.");
+                        return;
+                    }
+                        $.ajax({
+                            url: "{{ route('quizzes.update',':id') }}",  
+                            method: "POST",
+                            data: {
+                                quiz_title: quizTitle,
+                                time: quizTime,
+                                course_id: selectedCourse,
+                                question_ids: selectedRows,
+                                _token: $('meta[name="csrf-token"]').attr('content')
+                            },
+                            success: function(response) {
+                                toastr.success('Quiz updated successfully!');
+                                setTimeout(function() {
+                                    // location.reload();
+                                    window.location.href = '{{ route("quizzes.view") }}';
+                                }, 500); 
+                                console.log(response);
+                            },
+                            error: function(xhr) {
+                                if (xhr.status === 422) {
+                                    var errors = xhr.responseJSON.errors;
+                                    var errorMessages = '';
+                                    $.each(errors, function(field, messages) {
+                                        errorMessages += messages.join(', ') + '\n';
+                                    });
+                                    alert('Validation errors: \n' + errorMessages);
+                                } else {
+                                    toastr.success('An error occurred while submitting the data.!');
+                                }
+                                console.log(xhr.responseText);
+                            }
+                        });
+                    });
+            $('#category-dropdown').on('change', function() {
+            dTable.ajax.reload();
+            });
+        });
+    </script>
+
+    {{-- <script>
+        $(document).ready(function() {
+            $('.js-example-basic-single').select2({
+                dropdownParent: $('#category')
+            });
+
+            $(".js-example-theme-single").select2({
+                theme: "classic",
+                minimumResultsForSearch: Infinity
+            });
+        });
+    </script> --}}
+
+    {{-- <script>
+                    $('#select-all').on('click', function() {
+                    var isChecked = this.checked;
+                        $('#data-table input.select-row').each(function() {
+                            this.checked = isChecked;
+                        });
+                    });
+
+                    // Handle row checkbox selection
+                    $('#data-table').on('change', 'input.select-row', function() {
+                        var allChecked = $('#data-table input.select-row').length === $('#data-table input.select-row:checked').length;
+                        $('#select-all').prop('checked', allChecked);
+                    });
+
+
+                    $('#submitSelected').on('click', function() {
+                    // Get the selected course
+                    var selectedQuiz = $('#quiz-dropdown').val();
+                    var quizTime = $('#quizTime').val();
+                    var selectedCourse = $('#course-dropdown').val();
+
+                    // Get the selected row IDs
+                    var selectedRows = [];
+                    $('#data-table input.select-row:checked').each(function() {
+                        selectedRows.push($(this).data('id')); // Get the `data-id` of the checked checkbox
+                    });
+
+                    if (selectedCourse === "") {
+                        alert("Please select a course.");
+                        return;
+                    }
+
+                    if (quizTime === "") {
+                        alert("Please give the quiz time to complete.");
+                        return;
+                    }
+
+                    if (selectedRows.length === 0) {
+                        alert("Please select at least one question.");
+                        return;
+                    }
+
+                    // Send the data to the server via AJAX
+                    $.ajax({
+                        url: "{{ route('quizzes.store') }}",  // Replace with your route
+                        method: "POST",
+                        data: {
+                            time: quizTime,
+                            quiz_id: selectedQuiz,
+                            course_id: selectedCourse,
+                            question_ids: selectedRows,
+                            _token: $('meta[name="csrf-token"]').attr('content')  // CSRF token for security
+                        },
+                        success: function(response) {
+                            // Handle success (e.g., show a success message)
+                            alert("Data submitted successfully.");
+                            console.log(response);
+                        },
+                        error: function(xhr, status, error) {
+                              // If validation errors are returned from Laravel, show them to the user
+                            if (xhr.status === 422) {
+                                var errors = xhr.responseJSON.errors;
+                                var errorMessages = '';
+                                $.each(errors, function(field, messages) {
+                                    errorMessages += messages.join(', ') + '\n';
+                                });
+                                alert('Validation errors: \n' + errorMessages);
+                            } else {
+                                alert("An error occurred while submitting the data.");
+                            }
+                            console.log(xhr.responseText); // Log the response for further investigation
+                        }
+                    });
+                });
+    </script> --}}
 @endpush

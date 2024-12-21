@@ -1,11 +1,8 @@
 @extends('backend.app')
-
 <!-- Title -->
 @section('title', 'List of Quizzes')
-
 {{-- Main Content --}}
 @section('content')
-
     <div class="app-content-area">
         <div class="container-fluid">
             <!-- row -->
@@ -22,6 +19,54 @@
                         <div class="tab-content p-5" id="pills-tabContent-table">
                             <div class="tab-pane tab-example-design fade show active" id="pills-table-design"
                                 role="tabpanel" aria-labelledby="pills-table-design-tab">
+                                <!-- Basic table -->
+                                <div class="table-responsive">
+                                    <table id="data-table"
+                                        class="table table-striped text-center w-100 display responsive nowrap"
+                                        cellspacing="0" width="100%">
+                                        <thead>
+                                            <tr class="table-dark">
+                                                <th>SL#</th>
+                                                <th>Quiz Title</th>
+                                                <th>Quiz Time</th>
+                                                <th>Course Name</th>
+                                                <th>Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="align-middle">
+                                            @foreach ($quizzes as $quiz)
+                                            @php
+                                                $course_title = DB::table('courses')->find($quiz->course_id);
+                                                @endphp
+                                            <tr>
+                                                <td>{{$quiz->id}}</td>
+                                                <td>{{$quiz->title}}</td>
+                                                <td>{{$quiz->total_time}}</td>
+                                                <td>{{$course_title->course_title}}</td>
+                                                <td>
+                                                   <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
+
+                                                        <a href="{{route('quizzes.edit', $quiz->id)}}" class="btn btn-sm btn-success"><i class="bx bxs-edit"></i></a>
+                                
+                                                        <a href="#" onclick="showDeleteConfirm(' .$data->id .')" type="button"
+                                                                        class="btn btn-danger btn-sm text-white" title="Delete" readonly>
+                                                                        <i class="bx bxs-trash"></i>
+                                                        </a>
+                                                    </div>
+                                                </td>
+                                            </tr> 
+                                            @endforeach
+                                        <tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {{-- <div class="mb-6 card mx-3">
+                        <!-- Tab content -->
+                        <div class="tab-content p-5" id="pills-tabContent-table">
+                            <div class="tab-pane tab-example-design fade show active" id="pills-table-design"
+                                role="tabpanel" aria-labelledby="pills-table-design-tab">
 
                                 <!-- Basic table -->
                                 <div class="table-responsive">
@@ -32,8 +77,8 @@
                                             <tr class="table-dark">
                                                 <th>SL#</th>
                                                 <th>Quiz Title</th>
-                                                {{-- <th>Quiz Time</th> --}}
-                                                {{-- <th>Course Name</th> --}}
+                                                <th>Quiz Time</th> 
+                                                <th>Course Name</th>
                                                 <th>Action</th>
                                             </tr>
                                         </thead>
@@ -43,7 +88,7 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div> --}}
                 </div>
 
             </div>
@@ -96,7 +141,7 @@
                     pagingType: "full_numbers",
                     dom: "<'row justify-content-between table-topbar'<'col-md-2 col-sm-4 px-0'l><'col-md-2 col-sm-4 px-0'f>>tipr",
                     ajax: {
-                        url: "{{ route('quizzes.index') }}",
+                        url: "{{ route('quizzes.view') }}",
                         type: "get",
                     },
 
@@ -107,8 +152,8 @@
                             searchable: false
                         },
                         {
-                            data: 'title',
-                            name: 'quizTitle',
+                            data: 'total_time',
+                            name: 'quizTime',
                             orderable: true,
                             searchable: true
                         },

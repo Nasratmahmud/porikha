@@ -234,8 +234,10 @@
                             success: function(response) {
                                 toastr.success('Quiz created successfully!');
                                 setTimeout(function() {
-                                    location.reload();  
-                                }, 1500); 
+                                    // location.reload();
+                                    window.location.href = '{{ route("quizzes.view") }}';
+                                      
+                                }, 500); 
                                 console.log(response);
                             },
                             error: function(xhr) {
