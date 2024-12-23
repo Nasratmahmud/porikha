@@ -170,6 +170,9 @@
         var dTable = $('#data-table').DataTable({
             order: [],
             processing: true,
+            scrollY: "400px",
+            scrollX: true,
+            paging: false, 
             responsive: true,
             serverSide: true,
             ajax: {
@@ -184,7 +187,10 @@
                 {
                     searchable: false,
                     data: null,
-                    orderable: false,
+                    // orderable: false,
+                    scrollY: "400px",
+                    scrollX: true,
+                    paging: false, 
                     render: function(data, type, row) {
                         return `<input type="checkbox" class="select-row" data-id="${row.id}">`;
                     }

@@ -177,6 +177,9 @@
         var dTable = $('#data-table').DataTable({
             order: [],
             processing: true,
+            scrollY: "400px",
+            scrollX: true,
+            paging: false, 
             responsive: true,
             serverSide: true,
             ajax: {

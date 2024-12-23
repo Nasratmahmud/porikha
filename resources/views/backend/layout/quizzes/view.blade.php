@@ -48,7 +48,7 @@
 
                                                         <a href="{{route('quizzes.edit', $quiz->id)}}" class="btn btn-sm btn-success"><i class="bx bxs-edit"></i></a>
                                 
-                                                        <a href="#" onclick="showDeleteConfirm(' .$data->id .')" type="button"
+                                                        <a href="#" onclick="showDeleteConfirm({{ $quiz->id }})" type="button"
                                                                         class="btn btn-danger btn-sm text-white" title="Delete" readonly>
                                                                         <i class="bx bxs-trash"></i>
                                                         </a>
@@ -90,7 +90,6 @@
                         </div>
                     </div> --}}
                 </div>
-
             </div>
         </div>
     </div>
@@ -244,31 +243,32 @@
 
         // Delete Button
         function deleteItem(id) {
-            var url = '{{ route("questions.destroy", ':id') }}';
+            var url = '{{ route("quizzes.destroy", ':id') }}';
             $.ajax({
                 type: "POST",
                 url: url.replace(':id', id),
                 success: function(resp) {
-                    // Reloade DataTable
+                    
                     $('#data-table').DataTable().ajax.reload();
                     if (resp.success === true) {
                         setTimeout(function() {
-                            location.reload(); // Reload the page after 1.5 seconds
-                        }, 1500);
-
-                        // show toast message
-                        toastr.success(resp.message);
+                            location.reload();
+                        }, 500);
                         
 
                     } else if (resp.errors) {
-                        toastr.error(resp.errors[0]);
+                        // toastr.error(resp.errors[0]);
                     } else {
-                        toastr.error(resp.message);
+                        // toastr.error(resp.message);
+                        setTimeout(function() {
+                            location.reload();
+                        }, 500);
+                        
                     }
-                }, // success end
+                },
                 error: function(error) {
                     // location.reload();
-                } // Error
+                } 
             })
         }
     </script>

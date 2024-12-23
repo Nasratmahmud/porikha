@@ -17,13 +17,7 @@ use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Facades\Validator;
 
 class QuizController extends Controller {
-    /**
-     * Get all data in table view
-     *
-     * @param Request $request
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\JsonResponse
-     * @throws \Exception
-     */
+   
 
 
      public function view(){
@@ -73,7 +67,7 @@ class QuizController extends Controller {
      {
          $request->validate([
             //  'quiz_id' => 'nullable|exists:quizzes,id',  
-             'quiz_title' => 'required|string|max:255',
+             'quiz_title' => 'required|string|max:255|unique:quizzes,title',
              'time' => 'required|integer|min:5',  
              'course_id' => 'required|exists:courses,id', 
              'question_ids' => 'required|array',  
@@ -176,37 +170,36 @@ class QuizController extends Controller {
      }
     
      
-    /**
-     * Get Selected item data
-     *
-     * @param $id
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
-     */
-   
-   
-    /**
-     * Change Data the specified resource from storage.
-     *
-     * @param $id
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function status( $id ) {
-        $data = Quiz::where( 'id', $id )->first();
-        if ( $data->status == 1 ) {
-            $data->status = '0';
-            $data->save();
-            return response()->json( [
-                'success' => false,
-                'message' => 'Unpublished Successfully.',
-            ] );
-        } else {
-            $data->status = '1';
-            $data->save();
-            return response()->json( [
-                'success' => true,
-                'message' => 'Published Successfully.',
-            ] );
+    public function destroy($id){
+        try{
+            $quiz = Quiz::findOrFail($id);
+            // $quiz->questions()->delete();
+            $quiz->delete();
+        
+            return redirect()->back()->with('t-error','deleted successfully');
+        }
+        catch (Exception $e){
+            return redirect()->back()->with('t-error','delete quiz unsuccessful');
         }
     }
+   
+    // public function status( $id ) {
+    //     $data = Quiz::where( 'id', $id )->first();
+    //     if ( $data->status == 1 ) {
+    //         $data->status = '0';
+    //         $data->save();
+    //         return response()->json( [
+    //             'success' => false,
+    //             'message' => 'Unpublished Successfully.',
+    //         ] );
+    //     } else {
+    //         $data->status = '1';
+    //         $data->save();
+    //         return response()->json( [
+    //             'success' => true,
+    //             'message' => 'Published Successfully.',
+    //         ] );
+    //     }
+    // }
  
 }
