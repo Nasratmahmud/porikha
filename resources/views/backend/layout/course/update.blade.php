@@ -58,9 +58,6 @@
                                             </div>
                                         @endif
                                     </div>
-
-
-
                                     <!-- Input Item -->
                                     <div class="col-md-4 mb-3">
                                         <label class="form-label" for="course_price">Course Price</label>
@@ -100,6 +97,52 @@
                                         @if ($errors->has('course_feature_image'))
                                             <div class="invalid-feedback my-2 d-block">
                                                 {{ $errors->first('course_feature_image') }}
+                                            </div>
+                                        @endif
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label" for="ai_name">Ai Name</label>
+                                        <input type="text" name="ai_name" id="ai_name"
+                                               class="form-control {{ $errors->has('ai_name') ? 'is-invalid' : '' }}"
+                                               value="{{ $course->ai_name }}" required>
+                                        @if ($errors->has('ai_name'))
+                                            <div class="invalid-feedback">
+                                                {{ $errors->first('ai_name') }}
+                                            </div>
+                                        @endif
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label" for="ai_url">Ai Url</label>
+                                        <input type="text" name="ai_url" id="ai_url"
+                                               class="form-control {{ $errors->has('ai_url') ? 'is-invalid' : '' }}"
+                                               value="{{ $course->ai_url }}" required>
+                                        @if ($errors->has('ai_url'))
+                                            <div class="invalid-feedback">
+                                                {{ $errors->first('ai_url') }}
+                                            </div>
+                                        @endif
+                                    </div>
+                                    <div class="col-12 my-4">
+                                        <label class="form-label" for="ai_description">Ai Description</label>
+                                        <textarea name="ai_description"
+                                                  class="form-control {{ $errors->has('ai_description') ? 'is-invalid' : '' }}"
+                                                  id="ai_description"
+                                                  cols="30" rows="10" required>{!! $course->ai_description !!}</textarea>
+                                        @if ($errors->has('ai_description'))
+                                            <div class="invalid-feedback my-2 d-block">
+                                                {{ $errors->first('ai_description') }}
+                                            </div>
+                                        @endif
+                                    </div>
+                                    <div class="col-12 mb-4">
+                                        <label class="form-label" for="ai_image">Ai Image</label>
+                                        <input type="file"
+                                               class="form-control dropify {{ $errors->has('ai_image') ? 'is-invalid' : '' }}"
+                                               name="ai_image" id="ai_image" data-default-file="{{ asset('/' . $course->ai_picture) }}" >
+
+                                        @if ($errors->has('ai_image'))
+                                            <div class= "invalid-feedback my-2 d-block">
+                                                {{ $errors->first('ai_image') }}
                                             </div>
                                         @endif
                                     </div>

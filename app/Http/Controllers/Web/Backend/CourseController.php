@@ -320,9 +320,13 @@ class CourseController extends Controller
         if (User::find(auth()->user()->id)->hasPermissionTo('create course')) {
             $rules = [
                 'course_title' => 'required|string|unique:courses,course_title',
+                'ai_name' => 'required|string|unique:courses,ai_name',
                 'course_price' => 'required|numeric',
                 'summary' => 'required|string',
-                'course_feature_image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+                'ai_url' => 'nullable|string',
+                'ai_description'=> 'nullable|string',
+                'course_feature_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+                'ai_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
                 'course_pdf.*.*' => 'nullable|file|mimes:pdf|max:10000',
                 'module_number.*' => 'required|integer',
                 'module_titles.*' => 'required|string',
@@ -345,6 +349,8 @@ class CourseController extends Controller
                 $randomString = Str::random(20);
                 // IMAGE STORE HELPER
                 $featuredImage = Helper::fileUpload($request->file('course_feature_image'), 'course', $request->course_feature_image . '_' . $randomString);
+                
+                $aiImage = Helper::fileUpload($request->file('ai_image'), 'course', $request->ai_image . '_' . $randomString);
 
                 // VIMEO ENV SETUP
                 $vimeo = new Vimeo(env('VIMEO_CLIENT_ID'), env('VIMEO_CLIENT_SECRET'), env('VIMEO_ACCESS_TOKEN'));
@@ -360,6 +366,10 @@ class CourseController extends Controller
                 $course->course_price = $request->course_price;
                 $course->summary = $request->summary;
                 $course->course_feature_image = $featuredImage;
+                $course->ai_name = $request->ai_name;
+                $course->ai_url =  $request->ai_url;
+                $course->ai_picture =  $aiImage;
+                $course->ai_description = $request->ai_description;
                 $course->save();
 
                 $contentLengthArray = [];
@@ -517,6 +527,10 @@ class CourseController extends Controller
                 'summary' => 'required|string',
                 'course_feature_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
                 'course_pdf.*.*' => 'nullable|file|mimes:pdf|max:10000',
+                'ai_name' => 'required|string|exists:courses,ai_name',
+                'ai_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+                'ai_url' => 'nullable|string',
+                'ai_description'=> 'nullable|string',
                 'module_number.*' => 'required|integer',
                 'module_titles.*' => 'required|string',
             ];
@@ -540,6 +554,13 @@ class CourseController extends Controller
                     $course->course_feature_image = $featuredImage;
                 }
 
+                if ($request->hasFile('ai_image')) {
+                    $randomString = Str::random(20);
+                    $aiImage = Helper::fileUpload($request->file('ai_image'), 'course', $request->ai_image . '_' . $randomString);
+                    $course->ai_picture = $aiImage;
+                    // dd($aiImage);
+                }
+
                 // SETUP VIMEO CLIENT
                 $vimeo = new Vimeo(env('VIMEO_CLIENT_ID'), env('VIMEO_CLIENT_SECRET'), env('VIMEO_ACCESS_TOKEN'));
 
@@ -550,6 +571,10 @@ class CourseController extends Controller
                 $course->course_slug = Str::slug($request->course_title);
                 $course->course_price = $request->course_price;
                 $course->summary = $request->summary;
+                $course->ai_name = $request->ai_name;
+                $course->ai_url =  $request->ai_url;
+                // $course->ai_picture =  $aiImage;
+                $course->ai_description = $request->ai_description;
                 $course->save();
 
                 foreach ($request->module_titles as $index => $title) {

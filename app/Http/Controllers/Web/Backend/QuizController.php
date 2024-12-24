@@ -24,7 +24,7 @@ class QuizController extends Controller {
         $quizzes = Quiz::all();
         
         return view("backend.layout.quizzes.view",compact("quizzes"));
-        exit();
+        // exit();
      }
 
      public function index(Request $request) {

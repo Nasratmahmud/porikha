@@ -22,12 +22,12 @@ class DatabaseSeeder extends Seeder {
         $this->call( UserSeeder::class );
         $this->call( PermissionSeeder::class );
         $this->call( AdminAsignAllPermissionSeeder::class );
-        $this->call(CourseSeeder::class);
-        $this->call(QuestionCategorySeeder::class);
-        $this->call(QuestionSeeder::class);
-        $this->call(OptionSeeder::class);
-        $this->call(QuizSeeder::class);
-        $this->call(QuizQuestionSeeder::class);
+        //$this->call(CourseSeeder::class);
+        //$this->call(QuestionCategorySeeder::class);
+        //$this->call(QuestionSeeder::class);
+        //$this->call(OptionSeeder::class);
+        //$this->call(QuizSeeder::class);
+        //$this->call(QuizQuestionSeeder::class);
 
 
 

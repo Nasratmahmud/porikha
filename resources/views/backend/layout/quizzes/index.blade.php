@@ -208,6 +208,7 @@
                 {
                     searchable: false,
                     data: null,
+                    orderable: false,
                     scrollY: "400px",
                     scrollX: true,
                     paging: false, 

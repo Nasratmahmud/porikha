@@ -128,6 +128,9 @@
                     searchable: false,
                     data: null,
                     orderable: false,
+                    scrollY: "400px",
+                    scrollX: true,
+                    paging: false, 
                     render: function(data, type, row) {
                         var isChecked = selectedQuestions.includes(row.id) ? 'checked' : '';
                         return `
@@ -144,14 +147,12 @@
                 // { data: 'action', name: 'action', orderable: false, searchable: false },
             ]
         });
-        
         $('#select-all').on('click', function() {
             var isChecked = this.checked;
             $('#data-table input.select-row').each(function() {
                 this.checked = isChecked;
             });
         });
-
         $('#submitSelected').on('click', function() {
             var quizTitle = $('#quiz-title').val();
             var quizTime = $('#quizTime').val(); 

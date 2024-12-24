@@ -20,6 +20,13 @@
         .ck-editor__editable[role="textbox"] {
             min-height: 150px;
         }
+
+        .select2-results { background-color: #000; }
+
+        .select2-search input { background-color: #0000; }
+
+       .select2-search { background-color: #0000; }
+       
     </style>
 @endpush
 
@@ -98,6 +105,52 @@
                                         @if ($errors->has('course_feature_image'))
                                             <div class="invalid-feedback my-2 d-block">
                                                 {{ $errors->first('course_feature_image') }}
+                                            </div>
+                                        @endif
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label" for="ai_name">Ai Namae</label>
+                                        <input type="text" name="ai_name" id="ai_name"
+                                               class="form-control {{ $errors->has('ai_name') ? 'is-invalid' : '' }}"
+                                               value="{{ old('ai_name') }}" required>
+                                        @if ($errors->has('ai_name'))
+                                            <div class="invalid-feedback">
+                                                {{ $errors->first('ai_name') }}
+                                            </div>
+                                        @endif
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label" for="ai_url">Ai Url</label>
+                                        <input type="text" name="ai_url" id="ai_url"
+                                               class="form-control {{ $errors->has('ai_url') ? 'is-invalid' : '' }}"
+                                               value="{{ old('ai_url') }}" required>
+                                        @if ($errors->has('ai_url'))
+                                            <div class="invalid-feedback">
+                                                {{ $errors->first('ai_url') }}
+                                            </div>
+                                        @endif
+                                    </div>
+                                    <div class="col-12 my-4">
+                                        <label class="form-label" for="ai_description">Ai Description</label>
+                                        <textarea name="ai_description"
+                                                  class="form-control {{ $errors->has('ai_description') ? 'is-invalid' : '' }}"
+                                                  id="ai_description"
+                                                  cols="30" rows="10" required>{{ old('ai_description') }}</textarea>
+                                        @if ($errors->has('ai_description'))
+                                            <div class="invalid-feedback my-2 d-block">
+                                                {{ $errors->first('ai_description') }}
+                                            </div>
+                                        @endif
+                                    </div>
+                                    <div class="col-12 mb-4">
+                                        <label class="form-label" for="ai_image">Ai Image</label>
+                                        <input type="file"
+                                               class="form-control dropify {{ $errors->has('ai_image') ? 'is-invalid' : '' }}"
+                                               name="ai_image" id="ai_image">
+
+                                        @if ($errors->has('ai_image'))
+                                            <div class="invalid-feedback my-2 d-block">
+                                                {{ $errors->first('ai_image') }}
                                             </div>
                                         @endif
                                     </div>
@@ -240,6 +293,17 @@
             .catch(error => {
                 console.error(error);
             });
+      
+            //initialized editor
+            ClassicEditor
+                .create(document.querySelector('#ai_description'), {
+                    removePlugins: ['CKFinderUploadAdapter', 'CKFinder', 'EasyImage', 'Image', 'ImageCaption', 'ImageStyle',
+                        'ImageToolbar', 'ImageUpload', 'MediaEmbed'
+                    ],
+                })
+                .catch(error => {
+                    console.error(error);
+                });
 
         let moduleIndex = 1;
 
