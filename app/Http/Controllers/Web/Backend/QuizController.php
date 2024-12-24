@@ -22,8 +22,9 @@ class QuizController extends Controller {
 
      public function view(){
         $quizzes = Quiz::all();
-        // dd($quizzes);
+        
         return view("backend.layout.quizzes.view",compact("quizzes"));
+        exit();
      }
 
      public function index(Request $request) {
@@ -48,13 +49,6 @@ class QuizController extends Controller {
                         $correctOption = $data->options->firstWhere('is_correct', 1);
                         return $correctOption ? $correctOption->option_text : null;
                     })
-                    // ->addColumn('action', function ($data) {
-                    //     $html = '<div class="btn-group btn-group-sm" role="group" aria-label="Basic example">';
-                    //     $html .= '<a href="#" class="btn btn-sm btn-success"><i class="bx bxs-edit"></i></a>';
-                    //     $html .= '<a href="#" onclick="showDeleteConfirm(' . $data->id . ')" type="button" class="btn btn-danger btn-sm text-white" title="Delete" readonly><i class="bx bxs-trash"></i></a>';
-                    //     $html .= '</div>';
-                    //     return $html;
-                    // })
                     ->rawColumns([ 'is_correct', 'category'])
                     ->make(true);
             }
@@ -66,7 +60,6 @@ class QuizController extends Controller {
      public function store(Request $request)
      {
          $request->validate([
-            //  'quiz_id' => 'nullable|exists:quizzes,id',  
              'quiz_title' => 'required|string|max:255|unique:quizzes,title',
              'time' => 'required|integer|min:5',  
              'course_id' => 'required|exists:courses,id', 
@@ -79,13 +72,6 @@ class QuizController extends Controller {
              'total_time' => $request->input('time'),
              'course_id' => $request->input('course_id'),
          ];
-         
-        //  if ($request->has('quiz_id')) {
-        //      $quiz = Quiz::findOrFail($request->quiz_id);
-        //      $quiz->update($quizData);
-        //  } else {
-        //      $quiz = Quiz::create($quizData);
-        //  }
 
         if (isset($quizData)) {
             $quiz = Quiz::create($quizData);
@@ -100,7 +86,6 @@ class QuizController extends Controller {
 
 
      public function edit(Request $request,$id) {
-        // $cates = $request->input('category');
         $quizzes = Quiz::findOrFail( $id );
         $courses = Course::get();
         $categories = QuestionCategory::orderBy("id", "desc")->get();
@@ -108,11 +93,6 @@ class QuizController extends Controller {
         if (auth()->user()->id) {
             if ($request->ajax()) {
                 $data = Question::with('options');
-                // $categoriesWiseData = Question::with('options', 'category');
-                // if($cates && !empty($cates)){
-                //     $categoriesWiseData->whereIn('category_id', $cates);
-                // }
-                // $data = $categoriesWiseData->get();
                 return DataTables::of($data)
                     ->addIndexColumn()
                     ->addColumn('category', function ($data) {
@@ -122,13 +102,6 @@ class QuizController extends Controller {
                         $correctOption = $data->options->firstWhere('is_correct', 1);
                         return $correctOption ? $correctOption->option_text : null;
                     })
-                    // ->addColumn('action', function ($data) {
-                    //     $html = '<div class="btn-group btn-group-sm" role="group" aria-label="Basic example">';
-                    //     $html .= '<a href="#" class="btn btn-sm btn-success"><i class="bx bxs-edit"></i></a>';
-                    //     $html .= '<a href="#" onclick="showDeleteConfirm(' . $data->id . ')" type="button" class="btn btn-danger btn-sm text-white" title="Delete" readonly><i class="bx bxs-trash"></i></a>';
-                    //     $html .= '</div>';
-                    //     return $html;
-                    // })
                     ->rawColumns(['is_correct', ])
                     ->make(true);
             }
@@ -158,15 +131,18 @@ class QuizController extends Controller {
          
          if (isset($id)) {
              $quiz = Quiz::findOrFail($id);
+            
              $quiz->update($quizData);
+             
          } 
         else {
             return redirect()->back()->with('t-error','Id not found.');
         }
 
          $quiz->questions()->sync($request->input('question_ids'));
-     
+         
         return redirect()->back()->with('t-success', 'successful create quiz');
+        
      }
     
      
@@ -182,24 +158,5 @@ class QuizController extends Controller {
             return redirect()->back()->with('t-error','delete quiz unsuccessful');
         }
     }
-   
-    // public function status( $id ) {
-    //     $data = Quiz::where( 'id', $id )->first();
-    //     if ( $data->status == 1 ) {
-    //         $data->status = '0';
-    //         $data->save();
-    //         return response()->json( [
-    //             'success' => false,
-    //             'message' => 'Unpublished Successfully.',
-    //         ] );
-    //     } else {
-    //         $data->status = '1';
-    //         $data->save();
-    //         return response()->json( [
-    //             'success' => true,
-    //             'message' => 'Published Successfully.',
-    //         ] );
-    //     }
-    // }
  
 }
