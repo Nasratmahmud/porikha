@@ -336,7 +336,7 @@ class CourseController extends Controller
                 $rules["module_{$moduleNumber}_content_title.*"] = 'required|string';
                 $rules["module_{$moduleNumber}_video_url.*"] = 'nullable|file|mimes:mp4,mov,avi,flv';
                 $rules["module_{$moduleNumber}_content_length.*"] = 'required|nullable|string';
-                $rules["module_{$moduleNumber}_files.*"] = 'nullable|file|mimes:pdf,xlsx,xls,doc,docx,mp4,avi,mkv,webm|max:51200';
+                $rules["module_{$moduleNumber}_files.*.*"] = 'nullable|file|mimes:pdf,xlsx,xls,doc,docx,mp4,avi,mkv,webm|max:51200';
             }
 
             $validation = Validator::make($request->all(), $rules);
@@ -349,7 +349,7 @@ class CourseController extends Controller
                 $randomString = Str::random(20);
                 // IMAGE STORE HELPER
                 $featuredImage = Helper::fileUpload($request->file('course_feature_image'), 'course', $request->course_feature_image . '_' . $randomString);
-                
+
                 $aiImage = Helper::fileUpload($request->file('ai_image'), 'course', $request->ai_image . '_' . $randomString);
 
                 // VIMEO ENV SETUP
@@ -434,9 +434,9 @@ class CourseController extends Controller
                         $courseContent->save();
 
                         //course content multiple file add option started
-                        if ($request->hasFile("module_{$moduleNumber}_files") && isset($request["module_{$moduleNumber}_files"][$i])) {
+                        //if ($request->hasFile("module_{$moduleNumber}_files") && isset($request["module_{$moduleNumber}_files"][$i])) {
                             $files = $request->file("module_{$moduleNumber}_files")[$i]; // Multiple files
-                            //dd($files);
+                           //dd($files);
 
                             if (is_array($files)) {
                                 foreach ($files as $fileindex => $file) {
@@ -454,22 +454,22 @@ class CourseController extends Controller
                                         ]);
                                     }
                                 }
-                            } else {
+                            //} else {
                                 // Handle a single file
-                                $file = $files;
-                                if ($file->isValid()) {
-                                    $fileExtension = $file->getClientOriginalExtension();
-                                    $fileName = $randomString . '_' . time() . '.' . $fileExtension;
-                                    $filePath = Helper::fileUpload($file, 'course_files', $fileName);
+                                // $file = $files;
+                                // if ($file->isValid()) {
+                                //     $fileExtension = $file->getClientOriginalExtension();
+                                //     $fileName = $randomString . '_' . time() . '.' . $fileExtension;
+                                //     $filePath = Helper::fileUpload($file, 'course_files', $fileName);
 
                                     // Store file in the `course_content_files` table
-                                    CourseContentFile::create([
-                                        'course_content_id' => $courseContent->id,
-                                        'file_path' => $filePath,
-                                        'file_type' => $fileExtension, // PDF, Excel, etc.
-                                    ]);
-                                }
-                            }
+                                    // CourseContentFile::create([
+                                    //     'course_content_id' => $courseContent->id,
+                                    //     'file_path' => $filePath,
+                                    //     'file_type' => $fileExtension, // PDF, Excel, etc.
+                                    // ]);
+                                //}
+                            //}
                         }
                     }
                 }

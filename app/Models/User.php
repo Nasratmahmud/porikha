@@ -73,9 +73,15 @@ class User extends Authenticatable implements JWTSubject {
         $this->notify(new EmailVerificationNotification($otp));
         return $otp;
     }
+    
     public function course_purchases() {
         return $this->hasMany( CoursePurchase::class );
     }
+
+    public function cashonpurchases() {
+        return $this->hasMany( Purchase::class );
+    }
+
     public static function getPermissionGroups() {
         return DB::table( 'permissions' )->select( 'group_name' )->groupBy( 'group_name' )->get();
     }

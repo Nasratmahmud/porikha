@@ -17,4 +17,15 @@ class Purchase extends Model
         'status',
         'receipt_url',
     ];
+
+
+    public function course() {
+        return $this->belongsTo( Course::class );
+    }
+
+    public function user() {
+        return $this->belongsTo( User::class );
+    }
+
+
 }

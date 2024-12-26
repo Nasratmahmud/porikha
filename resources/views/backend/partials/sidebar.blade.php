@@ -8,10 +8,13 @@
                 @php($setting = \App\Models\Setting::first())
 
                 @if (!empty($setting->logo))
-                    <img src="{{ asset($setting->logo) }}" alt="dash ui - bootstrap 5 admin dashboard template">
+                    <img src="{{ asset($setting->logo) }}" alt="CertifyHub">
                 @else
-                    <img src="{{ asset('backend/images/logo/logo.png') }}"
-                        alt="dash ui - bootstrap 5 admin dashboard template">
+                    {{-- <img src="{{ asset('backend/images/logo/Logo - The Certify Hub - White.jpg') }}"
+                        alt="CertifyHub" width="230px"> --}}
+                        <img src="{{ asset('backend/images/logo/Logo - The Certify Hub - White.jpg') }}" 
+                                alt="CertifyHub" 
+                                style="max-width: 100%; height: auto;">
                 @endif
             </a>
             <!-- Navbar nav -->
@@ -114,13 +117,20 @@
                 </li>
                 @can('quiz menu')
                     <li class="nav-item">
-                        <a class="nav-link has-arrow @if (request()->routeIs('quiz.*')) active @endif"
-                            href="{{ route('quizzes.index') }}">
+                        <a class="nav-link has-arrow @if (request()->routeIs('quizzes.*')) active @endif"
+                            href="{{ route('quizzes.view') }}">
                             <i class="nav-icon me-2 bi bi-palette2"></i>
                             Quizzes
                         </a>
                     </li>
                 @endcan
+                <li class="nav-item">
+                    <a class="nav-link has-arrow @if (request()->routeIs('purchases.*')) active @endif"
+                        href="{{ route('purchases.index') }}">
+                        <i class="nav-icon me-2 bi bi-postcard"></i>
+                        Purchase
+                    </a>
+                </li>
                 {{-- @can('promo code menu')
 
                     <li class="nav-item">

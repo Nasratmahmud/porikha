@@ -9,10 +9,9 @@
                 @php
                     $setting = \App\Models\Setting::first();
                 @endphp
-                <img src="{{ !empty($setting->logo) ? asset($setting->logo) : asset('backend/images/logo/logo.png') }}"
-                    alt="{{ $setting->title ?? 'Imanifest' }}" title="{{ $setting->title ?? 'Imanifest' }}">
+                <img src="{{ !empty($setting->logo) ? asset($setting->logo) : asset('backend/images/logo/Logo - The Certify Hub - White.jpg') }}"
+                    alt="{{ $setting->title ?? 'CertifyHub' }}" title="{{ $setting->title ?? 'CertifyHub' }}">
             </a>
-
             @php
                 $user = \App\Models\User::where('id', auth()->user()->id)->first();
             @endphp

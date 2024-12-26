@@ -52,7 +52,6 @@
             <div class="row mt-5">
                 <div class="col-12">
                     <div class="text-end d-flex mx-3 justify-content-between align-items-center mb-4">
-                 
                     </div>
                     <div class="mb-6 card mx-3">
                         <div class="tab-content p-5" id="pills-tabContent-table">
@@ -141,24 +140,18 @@
             $(document).ready(function() {
              $('.js-example-basic-multiple').select2();
            });
-
-            
         $('.select2').each(function() {
             $(this).find('.select2-selection').css({
                 'background-color': '#333333', 
                 'color': '#ffffff',            
                 'border': '1px solid #444444', 
             });
-
-            
             $(this).find('.select2-dropdown').css({
                 'background-color': '#1a1a1a', 
                 'color': '#ffffff',            
                 'border': '1px solid #444444', 
             });
-
-           
-            $(this).find('.select2-results__option').hover(function() {
+            $(this).find('.select2-results__option').hover(function(){
                 $(this).css({
                     'background-color': '#444444', 
                     'color': '#ffffff',           
@@ -169,23 +162,17 @@
                     'color': '#ffffff',                
                 });
             });
-
-            
             $(this).find('.select2-search__field').css({
                 'background-color': '#2b2b2b',  
                 'color': '#ffffff',             
                 'border': '1px solid #444444',  
             });
-
-            
             $(this).find('.select2-selection__placeholder').css({
                 'color': '#888888', 
             });
            });
-
          });
     </script>
-
     <script>
         $(document).ready(function() {
         var dTable = $('#data-table').DataTable({
@@ -223,14 +210,12 @@
                 
             ]
         });
-
         $('#select-all').on('click', function() {
             var isChecked = this.checked;
             $('#data-table input.select-row').each(function() {
                 this.checked = isChecked;
             });
         });
-
         $('#submitSelected').on('click', function() {
             var quizTitle = $('#quiz-title').val();
             var quizTime = $('#quizTime').val();
@@ -257,8 +242,7 @@
                                 toastr.success('Quiz created successfully!');
                                 setTimeout(function() {
                                     // location.reload();
-                                    window.location.href = '{{ route("quizzes.view") }}';
-                                      
+                                    window.location.href = '{{ route("quizzes.view") }}'; 
                                 }, 500); 
                                 console.log(response);
                             },
@@ -277,7 +261,6 @@
                             }
                         });
                     });
-
             $('#category-dropdown').on('change', function() {
             dTable.ajax.reload();
             });

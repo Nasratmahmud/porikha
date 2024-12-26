@@ -22,4 +22,9 @@ class Course extends Model {
     {
         return $this->hasMany(CourseUserPurchase::class);
     }
+
+    public function handcashpurchases()
+    {
+        return $this->hasMany(Purchase::class);
+    }
 }

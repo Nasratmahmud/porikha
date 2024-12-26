@@ -15,7 +15,6 @@
         .dropify-wrapper .dropify-message p {
             font-size: initial;
         }
-
         /* editor css  */
         .ck-editor__editable[role="textbox"] {
             min-height: 150px;
@@ -26,7 +25,7 @@
         .select2-search input { background-color: #0000; }
 
        .select2-search { background-color: #0000; }
-       
+
     </style>
 @endpush
 
@@ -64,7 +63,6 @@
                                             </div>
                                         @endif
                                     </div>
-
                                     <!-- Input Item -->
                                     <div class="col-md-4 mb-3">
                                         <label class="form-label" for="course_price">Course Price </label>
@@ -101,7 +99,6 @@
                                         <input type="file"
                                                class="form-control dropify {{ $errors->has('course_feature_image') ? 'is-invalid' : '' }}"
                                                name="course_feature_image" id="course_feature_image">
-
                                         @if ($errors->has('course_feature_image'))
                                             <div class="invalid-feedback my-2 d-block">
                                                 {{ $errors->first('course_feature_image') }}
@@ -147,7 +144,6 @@
                                         <input type="file"
                                                class="form-control dropify {{ $errors->has('ai_image') ? 'is-invalid' : '' }}"
                                                name="ai_image" id="ai_image">
-
                                         @if ($errors->has('ai_image'))
                                             <div class="invalid-feedback my-2 d-block">
                                                 {{ $errors->first('ai_image') }}
@@ -175,7 +171,7 @@
                                                 <div id="collapse_1" class="accordion-collapse collapse show"
                                                      aria-labelledby="heading_1" data-bs-parent="#moduleAccordion">
                                                     <div class="accordion-body">
-                                                        <input type="hidden" name="module_number[]" value="1">
+                                                        <input type="text" name="module_number[]" value="1">
                                                         <label class="form-label">Module Title</label>
                                                         <input type="text" name="module_titles[]" class="form-control"
                                                                required>
@@ -242,7 +238,7 @@
                                                                                     {{-- Multiple File Upload Start --}}
                                                                                         <!-- File Upload Input for PDFs, Excel, etc. -->
                                                                                         <label for="module_1_files">Additional Files (PDF, Excel, etc.)</label>
-                                                                                        <input type="file" name="module_1_files[]" multiple class="form-control">
+                                                                                        <input type="file" name="module_1_files[0][]" multiple class="form-control">
 
                                                                                     {{-- Multiple File Upload End --}}
                                                                             </div>
@@ -293,7 +289,7 @@
             .catch(error => {
                 console.error(error);
             });
-      
+
             //initialized editor
             ClassicEditor
                 .create(document.querySelector('#ai_description'), {
@@ -306,6 +302,7 @@
                 });
 
         let moduleIndex = 1;
+        let fileIndex = 0; // Global file index
 
         //Module item add function
         function addModuleItem(mainDiv) {
@@ -365,7 +362,7 @@
                                                 <div class="invalid-feedback mb-2">Video URL required</div>
 
                                                    <label for="module_${moduleIndex}_files">Additional Files (PDF, Excel, etc.)</label>
-                                                                                        <input type="file" name="module_${moduleIndex}_files[]" multiple class="form-control">
+                                                                                        <input type="file" name="module_${moduleIndex}_files[${fileIndex}][]" multiple class="form-control">
                                         </div>
                                     </div>
                                 </div>
@@ -389,10 +386,12 @@
         }
 
         let ContentIndex = 1;
+       // let fileIndex = 0;
 
         //Module Content item add function
         function addContentItem(moduleNumber, contentAreaId) {
             ContentIndex++;
+            fileIndex++;
 
             let newContentItem = document.createElement('div');
             newContentItem.className = 'accordion-item';
@@ -419,7 +418,7 @@
                             <input type="file" name="module_${moduleNumber}_video_url[]" class="form-control mb-2" required>
                             <div class="invalid-feedback mb-2">Video URL required</div>
                                <label for="module_${moduleIndex}_files">Additional Files (PDF, Excel, etc.)</label>
-                                                                                        <input type="file" name="module_${moduleNumber}_files[]" multiple class="form-control">
+                                                                                        <input type="file" name="module_${moduleIndex}_files[${fileIndex}][]" multiple class="form-control">
                         </div>
                     </div>
                 `;

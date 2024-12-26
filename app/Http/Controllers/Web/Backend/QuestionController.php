@@ -17,24 +17,11 @@ class QuestionController extends Controller
     public function index(Request $request)
     {
         if (auth()->user()->id) {
-            // $data = Course::with( 'category' );
-            // dd($data);
 
             if ($request->ajax()) {
                 $data = Question::with('options')->get();
                 return DataTables::of($data)
                     ->addIndexColumn()
-
-                    // ->addColumn('status', function ($data) {
-                    //     $status = ' <div class="form-check form-switch d-flex justify-content-center align-items-center">';
-                    //     $status .= ' <input onclick="showStatusChangeAlert(' . $data->id . ')" type="checkbox" class="form-check-input" id="customSwitch' . $data->id . '" getAreaid="' . $data->id . '" name="status"';
-                    //     if ($data->status == 1) {
-                    //         $status .= 'checked';
-                    //     }
-                    //     $status .= '><label for="customSwitch' . $data->id . '" class="form-check-label" for="customSwitch"></label></div>';
-
-                    //     return $status;
-                    // })
 
                     ->addColumn('is_correct', function ($data) {
                         $correctOption = $data->options->firstWhere('is_correct', 1);
@@ -57,11 +44,9 @@ class QuestionController extends Controller
                     ->make(true);
             }
             return view('backend.layout.question.index');
-            // return redirect()->route('some.route')->with('success', 'Data has been saved!');
         }
         return redirect()->back();
 
-        // return view("backend.layout.question_category.index");
     }
 
     public function create()
@@ -72,16 +57,16 @@ class QuestionController extends Controller
 
     public function store(Request $request)
     {
-        // try {
-        //   dd($request->all());
-        // $request->validate([
-        //     'category_id' => 'required|exists:questions,id',
-        //     'question_title' => 'required',
-        //     'options' => 'required|array|min:4',
-        //     'options.*.option_text' => 'required',
-        //     'corrects' => 'required',
-        //     'note' => 'nullable',
-        // ]);
+        try {
+        
+        $request->validate([
+            'category_id' => 'required|exists:question_categories,id',
+            'question_title' => 'required',
+            'options' => 'required|array|min:4',
+            'options.*.option_text' => 'required',
+            'corrects' => 'required',
+            'note' => 'nullable',
+        ]);
 
         $question = new Question();
 
@@ -101,152 +86,22 @@ class QuestionController extends Controller
 
         return redirect()->back()->with('t-success', 'successful add');
 
-        // }catch (\Exception $e) {
-        //     return redirect()->back()->with('t-error','error');
-        // }
+        }catch (\Exception $e) {
+            return redirect()->back()->with('t-error','error');
+        }
     }
 
     public function edit($id)
     {
         $categories = QuestionCategory::get();
         $question = Question::with('options')->findOrFail($id);
-        //dd($question);
         return view('backend.layout.question.edit', compact('question', 'categories'));
     }
-
-    //     public function update(Request $request, $id)
-    //     {
-    //         //dd($request->all());
-
-    //         // try {
-    //                 // $request->validate([
-    //                 //     'category_id' => 'required|exists:questions,id',
-    //                 //     'question_title' => 'required',
-    //                 //     'options' => 'required|array|min:4',
-    //                 //     'options.*.option_text' => 'required',
-    //                 //     'corrects' => 'required',
-    //                 //     'note' => 'nullable',
-    //                 // ]);
-    // // dd($request->all());
-
-    //                 $question = Question::findOrFail($id);
-    //                 $option_ids = Option::where('question_id',$id)->get();
-    //                 $question->category_id = $request->category_id;
-    //                 $question->question_text = $request->question_title;
-    //                 $question->note = $request->note;
-    //                 $question->save();
-
-    //                 // foreach ($request->options as $key => $option) {
-    //                 //     $questionOption = $question->options()->find($option_ids->id);
-
-    //                 //     if ($questionOption) {
-    //                 //         // Determine if this option is the correct one
-    //                 //         $isCorrect = $key == $request->corrects ? true : false;
-
-    //                 //         // Update the option with the new values
-    //                 //         $questionOption->update([
-    //                 //             'option_text' => $option['option_text'],
-    //                 //             'is_correct' => $isCorrect,
-    //                 //         ]);
-    //                 //     }
-    //                 // }
-    //                 foreach ($option_ids as $option_id) {
-    //                     $questionOption = $question->options()->find($option_id->id);
-    //                     foreach ($request->options as $key => $option) {
-
-    //                         // dd($questionOption->id);
-    //                         if($questionOption->id == $option_id->id) {
-    //                             if($questionOption){
-    //                                 $isCorrect = $key == $request->corrects ? true : false;
-    //                                 // dd($questionOption);
-    //                                 $questionOption->update([
-
-    //                                     'option_text' => $option['option_text'],
-    //                                     'is_correct' => $isCorrect,
-
-    //                                 ]);
-
-    //                             }
-    //                         }
-    //                         // break;
-    //                     }
-    //                 }
-
-    //                 // foreach ($option_ids as $option_id) {
-    //                 //     // Find the option from the database using the ID
-    //                 //     $questionOption = $question->options()->find($option_id->id);
-
-    //                 //     // Check if the option is found
-    //                 //     if ($questionOption) {
-    //                 //         // Iterate over the options from the request to update them one by one
-    //                 //         foreach ($request->options as $key => $option) {
-    //                 //             // If the current option ID matches the option in the database
-    //                 //             if ($questionOption->id == $option['id']) {
-    //                 //                 // Determine if this option is the correct one
-    //                 //                 $isCorrect = ($key == $request->corrects) ? true : false;
-
-    //                 //                 // Update the option with the new data
-    //                 //                 $questionOption->update([
-    //                 //                     'option_text' => $option['option_text'],
-    //                 //                     'is_correct' => $isCorrect,
-    //                 //                 ]);
-
-    //                 //                 // After updating, break out of the inner loop to move to the next option in the outer loop
-    //                 //                 break;
-    //                 //             }
-    //                 //         }
-    //                 //     }
-    //                 // }
-
-    //                 return redirect()->back()->with('t-success','successful update');
-
-    //             // }catch (\Exception $e) {
-    //             //     return redirect()->back()->with('t-error','error');
-    //             // }
-    //     }
-
-    // public function update(Request $request, $id)
-    // {
-    //     try {
-    //         $validator = Validator::make($request->all(), [
-    //             'question_title'=> 'required|string|unique:question_categories,name',
-    //         ]) ;
-
-    //         if ($validator->fails()) {
-    //             return redirect()->back()->withErrors($validator)->withInput();
-    //         }
-
-    //         if($request->question_title != null){
-    //             $questionCategory = QuestionCategory::findOrFail($id);
-    //             $questionCategory->name = $request->question_title;
-    //             $questionCategory->save();
-
-    //             return redirect()->route('question.category.index')->with('t-success', 'Question Category Updated!');
-    //         }
-    //         else{
-    //             return redirect()->route('question.category.edit')->with('t-warning', 'Null not allow!');
-    //         }
-    //     } catch (\Exception $e) {
-    //         return redirect()->route('question.category.index')->with('t-error', 'Something goes wrong to edit category!');
-    //     }
-    // }
-
-    // public function destroy($id)
-    // {
-    //     try {
-    //     $questionCategory = QuestionCategory::findOrFail($id);
-    //     $questionCategory->delete();
-    //     return redirect()->back()->with('t-error', 'Question Category Deleted!');
-    //     } catch (\Exception $e)
-    //         {
-    //             return redirect()->back()->with('t-error', 'Something Goes Wrong to Delete Question Category!');
-    //         }
-    // }
 
     public function update(Request $request, $id)
     {
         try {
-            // Validate the request data
+            
             $request->validate([
                 'category_id' => 'required|exists:question_categories,id', // Assuming `category_id` belongs to `question_categories`
                 'question_title' => 'required',

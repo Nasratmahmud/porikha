@@ -3,7 +3,6 @@
 @section('title', 'List of Quiz')
 
 @push('style')
-
     .dataTables_filter 
     {
         text-align: right;
@@ -13,8 +12,6 @@
     {
         text-align: right;
     }
-
-
 @endpush
 
 @section('content')

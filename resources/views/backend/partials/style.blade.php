@@ -17,5 +17,7 @@
 <link rel="stylesheet" href="{{ asset('backend/libs/toastr/toastr.css') }}">
 <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" rel="stylesheet">
 
+
+
 @stack('style')
 

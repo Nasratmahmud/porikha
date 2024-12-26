@@ -1,9 +1,9 @@
 @extends('backend.app')
 
-<!-- Title -->
+
 @section('title', 'List of Question')
 
-{{-- Main Content --}}
+
 @section('content')
 
     <div class="app-content-area">
@@ -18,12 +18,12 @@
                             </a>
                     </div>
                     <div class="mb-6 card mx-3">
-                        <!-- Tab content -->
+                        
                         <div class="tab-content p-5" id="pills-tabContent-table">
                             <div class="tab-pane tab-example-design fade show active" id="pills-table-design"
                                 role="tabpanel" aria-labelledby="pills-table-design-tab">
 
-                                <!-- Basic table -->
+                                
                                 <div class="table-responsive">
                                     <table id="data-table"
                                         class="table table-striped text-center w-100 display responsive nowrap"
@@ -32,7 +32,6 @@
                                             <tr class="table-dark">
                                                 <th>SL#</th>
                                                 <th>Name</th>
-                                                {{-- <th>Status</th> --}}
                                                 <th>Action</th>
                                             </tr>
                                         </thead>
@@ -40,7 +39,7 @@
                                         <tbody>
                                     </table>
                                 </div>
-                                <!-- Basic table -->
+                                
                             </div>
                         </div>
                     </div>
@@ -50,7 +49,7 @@
         </div>
     </div>
 @endsection
-{{-- Add Script --}}
+
 @push('script')
     <script type="text/javascript" src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
 
@@ -112,12 +111,6 @@
                             orderable: true,
                             searchable: true
                         },
-                        // {
-                        //     data: 'status',
-                        //     name: 'status',
-                        //     orderable: true,
-                        //     searchable: true
-                        // },
                         {
                             data: 'action',
                             name: 'action',
@@ -136,44 +129,6 @@
             }
         });
 
-        // Status Change Confirm Alert
-        // function showStatusChangeAlert(id) {
-        //     event.preventDefault();
-        //     swal({
-        //         title: `Are you sure?`,
-        //         text: "You want to update the status?.",
-        //         buttons: true,
-        //         infoMode: true,
-        //     }).then((willStatusChange) => {
-        //         if (willStatusChange) {
-        //             statusChange(id);
-        //         }
-        //     });
-        // };
-
-        // Status Change
-        // function statusChange(id) {
-        //     var url = '{{ route('course.status', ':id') }}';
-        //     $.ajax({
-        //         type: "GET",
-        //         url: url.replace(':id', id),
-        //         success: function(resp) {
-        //             // Reloade DataTable
-        //             $('#data-table').DataTable().ajax.reload();
-        //             if (resp.success === true) {
-        //                 // show toast message
-        //                 toastr.success(resp.message);
-        //             } else if (resp.errors) {
-        //                 toastr.error(resp.errors[0]);
-        //             } else {
-        //                 toastr.error(resp.message);
-        //             }
-        //         }, // success end
-        //         error: function(error) {
-        //             // location.reload();
-        //         } // Error
-        //     })
-        // }
         // delete Confirm
         function showDeleteConfirm(id) {
             event.preventDefault();
@@ -200,10 +155,10 @@
                     $('#data-table').DataTable().ajax.reload();
                     if (resp.success === true) {
                         setTimeout(function() {
-                            location.reload(); // Reload the page after 1.5 seconds
+                            location.reload(); 
                         }, 1500);
 
-                        // show toast message
+                        
                         toastr.success(resp.message);
                         
 
@@ -212,10 +167,10 @@
                     } else {
                         toastr.error(resp.message);
                     }
-                }, // success end
+                }, 
                 error: function(error) {
                     // location.reload();
-                } // Error
+                } 
             })
         }
     </script>

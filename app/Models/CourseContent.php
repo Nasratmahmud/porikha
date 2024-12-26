@@ -24,17 +24,8 @@ class CourseContent extends Model
         return $this->hasMany(CourseContentFile::class,'course_content_id', 'id');
     }
 
-    public function courseFilesUnderCourseId($courseId)
+    public function progress()
     {
-        // Retrieve the course along with its nested relationships: modules, contents, and files
-        $course = Course::with('modules.contents')->find($courseId);
-
-        // Check if the course exists
-        if (!$course) {
-            return $this->error('Course not found', 404);
-        }
-
-        // Return the course with its modules, contents, and files
-        return $this->success($course, 'Course files retrieved successfully', 200);
+        return $this->hasMany(UserCourseProgress::class);
     }
 }

@@ -15,25 +15,12 @@ class QuestioncategoryController extends Controller
     public function index(Request $request){
 
         if (auth()->user()->id) {
-            // $data = Course::with( 'category' );
-            // dd($data);
             if ($request->ajax()) {
                 $data = QuestionCategory::all();
 
                 return DataTables::of($data)
                     ->addIndexColumn()
 
-                   
-                    // ->addColumn('status', function ($data) {
-                    //     $status = ' <div class="form-check form-switch d-flex justify-content-center align-items-center">';
-                    //     $status .= ' <input onclick="showStatusChangeAlert(' . $data->id . ')" type="checkbox" class="form-check-input" id="customSwitch' . $data->id . '" getAreaid="' . $data->id . '" name="status"';
-                    //     if ($data->status == 1) {
-                    //         $status .= 'checked';
-                    //     }
-                    //     $status .= '><label for="customSwitch' . $data->id . '" class="form-check-label" for="customSwitch"></label></div>';
-
-                    //     return $status;
-                    // })
                     ->addColumn('action', function ($data) {
                         
                         $html = '<div class="btn-group btn-group-sm" role="group" aria-label="Basic example">';
@@ -53,13 +40,9 @@ class QuestioncategoryController extends Controller
                     ->make(true);
             }
             return view('backend.layout.question_category.index');
-            // return redirect()->route('some.route')->with('success', 'Data has been saved!');
         }
         return redirect()->back();
 
-
-
-        // return view("backend.layout.question_category.index");
     }
 
 
@@ -84,7 +67,6 @@ class QuestioncategoryController extends Controller
         $questionCategory->name = $request->question_title;
         $questionCategory->save();
 
-    //    return redirect()->back();
     return redirect()->route('question.category.index')->with('t-success', 'New Question Category Create!');
         } catch (\Exception $e) {
             return redirect()->route('question.category.index')->with('t-error', 'Something goes wrong to create category!');
