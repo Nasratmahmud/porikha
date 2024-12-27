@@ -12,8 +12,8 @@
                 @else
                     {{-- <img src="{{ asset('backend/images/logo/Logo - The Certify Hub - White.jpg') }}"
                         alt="CertifyHub" width="230px"> --}}
-                        <img src="{{ asset('backend/images/logo/Logo - The Certify Hub - White.jpg') }}" 
-                                alt="CertifyHub" 
+                        <img src="{{ asset('backend/images/logo/Logo - The Certify Hub - White.jpg') }}"
+                                alt="CertifyHub"
                                 style="max-width: 100%; height: auto;">
                 @endif
             </a>

@@ -324,7 +324,7 @@ class CourseController extends Controller
                 'course_price' => 'required|numeric',
                 'summary' => 'required|string',
                 'ai_url' => 'nullable|string',
-                'ai_description'=> 'nullable|string',
+                'ai_description' => 'nullable|string',
                 'course_feature_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
                 'ai_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
                 'course_pdf.*.*' => 'nullable|file|mimes:pdf|max:10000',
@@ -367,8 +367,8 @@ class CourseController extends Controller
                 $course->summary = $request->summary;
                 $course->course_feature_image = $featuredImage;
                 $course->ai_name = $request->ai_name;
-                $course->ai_url =  $request->ai_url;
-                $course->ai_picture =  $aiImage;
+                $course->ai_url = $request->ai_url;
+                $course->ai_picture = $aiImage;
                 $course->ai_description = $request->ai_description;
                 $course->save();
 
@@ -387,24 +387,24 @@ class CourseController extends Controller
                             'name' => $title,
                             'description' => $request->summary,
                             'privacy' => [
-                                'view' => 'disable'
+                                'view' => 'disable',
                             ],
                             'embed' => [
                                 'title' => [
                                     'name' => 'hide',
                                     'owner' => 'hide',
-                                    'portrait' => 'hide'
+                                    'portrait' => 'hide',
                                 ],
                                 'buttons' => [
                                     'like' => false,
                                     'watchlater' => false,
                                     'share' => false,
-                                    'embed'=> false
+                                    'embed' => false,
                                 ],
                                 'logos' => [
                                     'vimeo' => false,
                                 ],
-                            ]
+                            ],
                         ]);
                         $moduleVideoData = $vimeo->request($moduleVideoResponse, [], 'GET')['body'];
                         $moduleVideoId = trim($moduleVideoData['uri'], '/videos/');
@@ -435,40 +435,40 @@ class CourseController extends Controller
 
                         //course content multiple file add option started
                         //if ($request->hasFile("module_{$moduleNumber}_files") && isset($request["module_{$moduleNumber}_files"][$i])) {
-                            $files = $request->file("module_{$moduleNumber}_files")[$i]; // Multiple files
-                           //dd($files);
+                        $files = $request->file("module_{$moduleNumber}_files")[$i]; // Multiple files
+                        //dd($files);
 
-                            if (is_array($files)) {
-                                foreach ($files as $fileindex => $file) {
-                                    if ($file->isValid()) {
-                                        $randomString = Str::random(20);
-                                        $fileExtension = $file->getClientOriginalExtension();
-                                        $fileName = $randomString . '_' . Str::uuid() . '.' . $fileExtension;
-                                        $filePath = Helper::fileUpload($file, 'course_files', $fileName);
-
-                                        // Store file in the `course_content_files` table
-                                        CourseContentFile::create([
-                                            'course_content_id' => $courseContent->id,
-                                            'file_path' => $filePath,
-                                            'file_type' => $fileExtension, // PDF, Excel, etc.
-                                        ]);
-                                    }
-                                }
-                            //} else {
-                                // Handle a single file
-                                // $file = $files;
-                                // if ($file->isValid()) {
-                                //     $fileExtension = $file->getClientOriginalExtension();
-                                //     $fileName = $randomString . '_' . time() . '.' . $fileExtension;
-                                //     $filePath = Helper::fileUpload($file, 'course_files', $fileName);
+                        if (is_array($files)) {
+                            foreach ($files as $fileindex => $file) {
+                                if ($file->isValid()) {
+                                    $randomString = Str::random(20);
+                                    $fileExtension = $file->getClientOriginalExtension();
+                                    $fileName = $randomString . '_' . Str::uuid() . '.' . $fileExtension;
+                                    $filePath = Helper::fileUpload($file, 'course_files', $fileName);
 
                                     // Store file in the `course_content_files` table
-                                    // CourseContentFile::create([
-                                    //     'course_content_id' => $courseContent->id,
-                                    //     'file_path' => $filePath,
-                                    //     'file_type' => $fileExtension, // PDF, Excel, etc.
-                                    // ]);
-                                //}
+                                    CourseContentFile::create([
+                                        'course_content_id' => $courseContent->id,
+                                        'file_path' => $filePath,
+                                        'file_type' => $fileExtension, // PDF, Excel, etc.
+                                    ]);
+                                }
+                            }
+                            //} else {
+                            // Handle a single file
+                            // $file = $files;
+                            // if ($file->isValid()) {
+                            //     $fileExtension = $file->getClientOriginalExtension();
+                            //     $fileName = $randomString . '_' . time() . '.' . $fileExtension;
+                            //     $filePath = Helper::fileUpload($file, 'course_files', $fileName);
+
+                            // Store file in the `course_content_files` table
+                            // CourseContentFile::create([
+                            //     'course_content_id' => $courseContent->id,
+                            //     'file_path' => $filePath,
+                            //     'file_type' => $fileExtension, // PDF, Excel, etc.
+                            // ]);
+                            //}
                             //}
                         }
                     }
@@ -530,7 +530,7 @@ class CourseController extends Controller
                 'ai_name' => 'required|string|exists:courses,ai_name',
                 'ai_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
                 'ai_url' => 'nullable|string',
-                'ai_description'=> 'nullable|string',
+                'ai_description' => 'nullable|string',
                 'module_number.*' => 'required|integer',
                 'module_titles.*' => 'required|string',
             ];
@@ -539,6 +539,7 @@ class CourseController extends Controller
                 $rules["module_{$moduleNumber}_content_title.*"] = 'required|string|max:255';
                 $rules["module_{$moduleNumber}_video_url.*"] = 'nullable|file|mimes:mp4,mov,avi,flv';
                 $rules["module_{$moduleNumber}_content_length.*"] = 'nullable|string|max:255';
+                $rules["module_{$moduleNumber}_files.*"] = 'nullable|file|mimes:pdf,xlsx,xls,doc,docx,mp4,avi,mkv,webm|max:51200';
                 //$rules["course_pdf.{$moduleNumber}.*"] = 'nullable';
             }
 
@@ -572,7 +573,7 @@ class CourseController extends Controller
                 $course->course_price = $request->course_price;
                 $course->summary = $request->summary;
                 $course->ai_name = $request->ai_name;
-                $course->ai_url =  $request->ai_url;
+                $course->ai_url = $request->ai_url;
                 // $course->ai_picture =  $aiImage;
                 $course->ai_description = $request->ai_description;
                 $course->save();
@@ -596,46 +597,20 @@ class CourseController extends Controller
 
                     foreach ($request["module_{$moduleNumber}_content_title"] as $i => $contentTitle) {
                         $contentId = $request["module_{$moduleNumber}_content_id_list"][$i] ?? null;
+                        $courseContent = null;
 
-                        //dd($contentId);
-                        // Debugging: Print out the module and content title being processed
-                        // \Log::debug("Processing content title: {$contentTitle} for module {$moduleNumber}");
-
-                        // Check if content ID is provided in the request
-                        //$contentId = $request["module_{$moduleNumber}_content_id"][$contentTitle] ?? null;
-                        //dd($contentId);
-
-                        $courseContent = CourseContent::find($contentId);
-                        //dd($courseContent);
-
-                        if (!$courseContent) {
-                            \Log::debug('Content not found by ID, searching by title...');
-                            $courseContent = CourseContent::where('course_module_id', $courseModule->id)->first();
+                        // If content ID is provided, attempt to find the existing content
+                        if ($contentId) {
+                            $courseContent = CourseContent::find($contentId);
                         }
 
-                        // If content still doesn't exist, create a new one
+                        // If no content ID is provided or content is not found, create a new instance
                         if (!$courseContent) {
-                            \Log::debug('Content not found, creating new...');
                             $courseContent = new CourseContent();
                             $courseContent->course_module_id = $courseModule->id;
                             $courseContent->course_id = $course->id;
                         }
 
-                        // Check if content already exists for the current module and content title
-                        // $courseContent = CourseContent::where('course_module_id', $courseModule->id)
-                        //     ->where('content_title', $contentTitle)
-                        //     ->first();
-                        //  \Log::debug("Content details: {$courseContent}, loading...");
-
-                        // // If content exists, update it; if not, create new content
-                        // if ($courseContent) {
-                        //     \Log::debug("Content found: {$contentTitle}, updating...");
-                        // } else {
-                        //     \Log::debug("Content not found: {$contentTitle}, creating new...");
-                        //     $courseContent = new CourseContent();
-                        //     $courseContent->course_module_id = $courseModule->id;
-                        //     $courseContent->course_id = $course->id;
-                        // }
 
                         // Check if a new video is uploaded
                         if ($request->hasFile("module_{$moduleNumber}_video_url") && isset($request->file("module_{$moduleNumber}_video_url")[$i])) {
@@ -646,7 +621,30 @@ class CourseController extends Controller
                             }
 
                             $moduleVideoPath = $request->file("module_{$moduleNumber}_video_url")[$i]->getPathname();
-                            $moduleVideoResponse = $vimeo->upload($moduleVideoPath);
+                            //$moduleVideoResponse = $vimeo->upload($moduleVideoPath);
+                            $moduleVideoResponse = $vimeo->upload($moduleVideoPath, [
+                                'name' => $title,
+                                'description' => $request->summary,
+                                'privacy' => [
+                                    'view' => 'disable',
+                                ],
+                                'embed' => [
+                                    'title' => [
+                                        'name' => 'hide',
+                                        'owner' => 'hide',
+                                        'portrait' => 'hide',
+                                    ],
+                                    'buttons' => [
+                                        'like' => false,
+                                        'watchlater' => false,
+                                        'share' => false,
+                                        'embed' => false,
+                                    ],
+                                    'logos' => [
+                                        'vimeo' => false,
+                                    ],
+                                ],
+                            ]);
 
                             $moduleVideoData = $vimeo->request($moduleVideoResponse, [], 'GET')['body'];
                             $moduleVideoId = trim($moduleVideoData['uri'], '/videos/');
@@ -659,30 +657,31 @@ class CourseController extends Controller
                         $courseContent->save();
 
                         \Log::debug("Content title '{$contentTitle}' saved/updated.");
-                        //start
-
+                        //star
                         if ($request->hasFile("module_{$moduleNumber}_files")) {
-                            // Delete existing files
-                            $existingFiles = CourseContentFile::where('course_content_id', $courseContent->id)->get();
-                            foreach ($existingFiles as $existingFile) {
-                                if (file_exists(public_path($existingFile->file_path))) {
-                                    unlink(public_path($existingFile->file_path)); // Delete the file
-                                }
-                                $existingFile->delete(); // Remove from database
-                            }
 
                             // Add new files
-                            foreach ($request->file("module_{$moduleNumber}_files") as $file) {
+
+                            foreach ($request->file("module_{$moduleNumber}_files") as $content_id => $file) {
+
                                 if ($file->isValid()) {
                                     $fileExtension = $file->getClientOriginalExtension();
                                     $fileName = Str::random(20) . '_' . Str::uuid() . '.' . $fileExtension;
                                     $filePath = Helper::fileUpload($file, 'course_files', $fileName);
-
-                                    CourseContentFile::create([
-                                        'course_content_id' => $courseContent->id,
-                                        'file_path' => $filePath,
-                                        'file_type' => $fileExtension,
-                                    ]);
+                                    $existingContent = CourseContent::where('id',$content_id)->first();
+                                    if($existingContent){
+                                        CourseContentFile::create([
+                                            'course_content_id' => $content_id,
+                                            'file_path' => $filePath,
+                                            'file_type' => $fileExtension,
+                                        ]);
+                                    }else{
+                                        CourseContentFile::create([
+                                            'course_content_id' => $courseContent->id,
+                                            'file_path' => $filePath,
+                                            'file_type' => $fileExtension,
+                                        ]);
+                                    }
                                 }
                             }
                         }

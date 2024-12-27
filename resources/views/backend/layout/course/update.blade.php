@@ -180,9 +180,9 @@
                                                         aria-labelledby="heading_{{ $key + 1 }}"
                                                         data-bs-parent="#moduleAccordion">
                                                         <div class="accordion-body">
-                                                            <input type="hidden" name="module_ids[]"
+                                                            <input type="text" name="module_ids[]"
                                                                 value="{{ $module['id'] }}">
-                                                            <input type="hidden" name="module_number[]"
+                                                            <input type="text" name="module_number[]"
                                                                 value="{{ $key + 1 }}">
                                                             <label class="form-label">Module Title</label>
                                                             <input type="text" name="module_titles[]"
@@ -272,10 +272,10 @@
                                                                                             PDF</label>
                                                                                         <input type="file"
                                                                                             class="form-control"
-                                                                                            name="module_{{ $key + 1 }}_course_pdf[]"
+                                                                                            name="module_{{ $key + 1 }}_files[{{$content->id}}]"
                                                                                             id="course_pdf"
                                                                                             accept="application/pdf">
-                                                                                        <p>{{ $content['course_pdf'] }}</p>
+                                                                                        {{-- <p>{{ $content['course_pdf'] }}</p> --}}
 
 
                                                                                         <div class="form-group">
@@ -411,7 +411,7 @@
                                             <div class="invalid-feedback mb-2">Video File required</div>
                                             <label class="form-label" for="course_pdf">Add PDF</label>
                                             <input type="file" class="form-control"
-                                             name="module_${moduleIndex}_course_pdf[]" id="course_pdf" accept="application/pdf">
+                                             name="module_${moduleIndex}_files[]" id="course_pdf" accept="application/pdf">
                                             <div class="invalid-feedback mb-2">Course PDF required</div>
                                         </div>
                                     </div>
@@ -466,7 +466,7 @@
                             <div class="invalid-feedback mb-2">Video URL required</div>
                             <label class="form-label" for="course_pdf">Add PDF</label>
                             <input type="file" class="form-control"
-                             name="module_${moduleNumber}_course_pdf[]" id="course_pdf" accept="application/pdf">
+                             name="module_${moduleNumber}_files[]" id="course_pdf" accept="application/pdf">
                             <div class="invalid-feedback mb-2">Course PDF required</div>
                         </div>
                     </div>

@@ -1,5 +1,5 @@
 @extends('backend.app')
-@section('title', 'List of Quizzes')
+@section('title', 'List of purchase')
 
 @push('style')
 
@@ -35,48 +35,14 @@
                                         </thead>
                                         <tbody class="align-middle">
                                             <tr>
-
-                                                @php
-                                                    $coursesList = '';
-                                                    $userId = Auth::user()->id;
-                                                    $user = App\Models\User::find($userId); 
-                                                    $puchaseTableValue = App\Models\Purchase::where('user_id',$userId)->get();
-                                                    
-                                                    $checkAnyPurchase = $user->cashonpurchases()
-                                                        ->whereHas('course', function ($query) {
-                                                            $query->whereNotNull('id'); 
-                                                        })
-                                                        ->first();
-                                                    if( isset( $checkAnyPurchase ) ){
-                                                        $purchases = $user->cashonpurchases()
-                                                            ->whereHas('course', function ($query) {
-                                                                $query->whereNotNull('id'); 
-                                                            })
-                                                            ->get();
-                                                        foreach ($purchases as $coursePurchase){
-                                                            $courses[] = $coursePurchase->course->course_title ;
-                                                            $price[] = $coursePurchase->course->course_price ;
-                                                        }
-                                                        $coursesList = implode(',',$courses);
-                                                        
-                                                    }
-
-                                                    // foreach ($puchaseTableValue as $coursePrice){
-                                                    //         $price[] = $coursePrice->amount ;
-                                                    //     }
-                                                    // $price = implode(',',$price);
-                                                    $price = array_sum($price);
-                                                    $status = $courses ? 'Purchase successfully' : 'No course purchase';
-
-                                                @endphp
-
-                                                <td>{{ Auth::user()->name }}</td>
+                                                <td>{{ $name }}</td>
                                                 <td>{{ $coursesList }}</td>
-                                                <td>${{ number_format($price/112,3,'.','') }}</td>
+                                                <td>{{ $price }}</td>
                                                 <td>{{ $status }}</td>
                                                 <td>
-                                                    <a href="{{ route('invoice.download', ['purchaseId' => $userId]) }}" class="btn btn-success">
-                                                        Download Invoice
+                                                    {{-- @dd($userId); --}}
+                                                     <a href="{{ $userId ? route('invoice.download', ['purchaseId' => $userId  ]) : '#' }}" class="btn btn-success">
+                                                        {{ $userId ? Download : '' }}
                                                     </a>
                                                 </td>
                                             </tr> 

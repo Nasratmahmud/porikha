@@ -1,11 +1,12 @@
-<?php 
-
+<?php
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Web\Backend\QuizController;
+use App\Http\Controllers\Web\Backend\InvoiceController;
+use App\Http\Controllers\Web\Backend\InvoicesController;
+use App\Http\Controllers\Web\Backend\PurchageController;
 use App\Http\Controllers\Web\Backend\QuestionController;
 use App\Http\Controllers\Web\Backend\QuestioncategoryController;
-
 
 
 Route::prefix('question/category')->controller( QuestioncategoryController::class )->group( function () {
@@ -35,10 +36,26 @@ Route::prefix('quizzes')->controller( QuizController::class )->group( function (
     Route::get( '/view', 'view' )->name( 'quizzes.view' );
     Route::get( '/create', 'create' )->name( 'quizzes.create' );
     Route::post( '/create', 'store' )->name( 'quizzes.store' );
-    // Route::get( '/edit/{id}', 'edit' )->name( 'quizzes.edit' );
-    // Route::post( '/update/{id}', 'update' )->name( 'quizzes.update' );
-    // Route::post( '/delete/{id}', 'destroy' )->name( 'quizzes.destroy' );
+    Route::get( '/edit/{id}', 'edit' )->name( 'quizzes.edit' );
+    Route::post( '/update/{id}', 'update' )->name( 'quizzes.update' );
+    Route::delete( '/delete/{id}', 'destroy' )->name( 'quizzes.destroy' );
 });
 
 
+
+Route::prefix('purchases')->controller( PurchageController::class )->group( function () {
+    Route::get( '/', 'index' )->name( 'purchases.index' );
+    // Route::get( '/view', 'view' )->name( 'quizzes.view' );
+    // Route::get( '/create', 'create' )->name( 'quizzes.create' );
+    // Route::post( '/create', 'store' )->name( 'quizzes.store' );
+    // Route::get( '/edit/{id}', 'edit' )->name( 'quizzes.edit' );
+    // Route::post( '/update/{id}', 'update' )->name( 'quizzes.update' );
+    // Route::delete( '/delete/{id}', 'destroy' )->name( 'quizzes.destroy' );
+});
+
+
+
+
+
+Route::get('download-invoice/{purchaseId}', [InvoicesController::class, 'downloadInvoice'])->name('invoice.download');
 
