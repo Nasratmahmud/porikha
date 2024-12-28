@@ -124,13 +124,13 @@
                         </a>
                     </li>
                 @endcan
-                <li class="nav-item">
+                {{-- <li class="nav-item">
                     <a class="nav-link has-arrow @if (request()->routeIs('purchases.*')) active @endif"
                         href="{{ route('purchases.index') }}">
                         <i class="nav-icon me-2 bi bi-postcard"></i>
                         Purchase
                     </a>
-                </li>
+                </li> --}}
                 {{-- @can('promo code menu')
 
                     <li class="nav-item">

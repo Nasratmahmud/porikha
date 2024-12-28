@@ -275,9 +275,6 @@
                                                                                             name="module_{{ $key + 1 }}_files[{{$content->id}}]"
                                                                                             id="course_pdf"
                                                                                             accept="application/pdf">
-                                                                                        {{-- <p>{{ $content['course_pdf'] }}</p> --}}
-
-
                                                                                         <div class="form-group">
                                                                                             <label>Content ID: {{ $content->id }}</label>
                                                                                             <label>Existing Files:</label>
@@ -286,17 +283,16 @@
                                                                                                     @if ($file->course_content_id == $content->id)
                                                                                                         <li>
                                                                                                             <a href="{{ asset($file->file_path) }}" target="_blank">{{ basename($file->file_path) }}</a>
+                                                                                                            <form action="#" method="get">
+                                                                                                                @csrf
+                                                                                                                <a href="{{route("delete.file",["id" => $file->id])}}"  type="submit" class="btn btn-danger btn-sm text-white m-3" title="Delete" readonly><i class="bx bxs-trash"></i></a>
+                                                                                                            </form>
                                                                                                         </li>
                                                                                                     @endif
                                                                                                 @endforeach
                                                                                             </ul>
                                                                                         </div>
-
-
-
-
                                                                                         <!-- Files -->
-
                                                                                     </div>
                                                                                 </div>
                                                                             </div>
@@ -482,7 +478,7 @@
         }
 
         //delete item function
-        function deleteItem(url, itemId) {
+        function deleteItem(itemId) {
             event.preventDefault();
             swal({
                 title: `Are you sure you want to delete this record?`,
@@ -515,6 +511,50 @@
                 }
             });
         };
+
+
+        function showDeleteConfirm(id) {
+            event.preventDefault();
+            swal({
+                title: `Are you sure you want to delete this record?`,
+                text: "If you delete this, it will be gone forever.",
+                buttons: true,
+                dangerMode: true,
+            }).then((willDelete) => {
+                if (willDelete) {
+                    deleteItem(id);
+                }
+            });
+        };
+
+        // Delete Button
+        function deleteItem(id) {
+            var url = '{{ route("questions.destroy", ':id') }}';
+            $.ajax({
+                type: "POST",
+                url: url.replace(':id', id),
+                success: function(resp) {
+                    // Reloade DataTable
+                    $('#data-table').DataTable().ajax.reload();
+                    if (resp.success === true) {
+                        setTimeout(function() {
+                            location.reload(); 
+                        }, 1500);
+                     
+                        toastr.success(resp.message);
+                        
+
+                    } else if (resp.errors) {
+                        toastr.error(resp.errors[0]);
+                    } else {
+                        toastr.error(resp.message);
+                    }
+                }, 
+                error: function(error) {
+                    // location.reload();
+                } 
+            })
+        }
 
         //Status Change function
         function statusChange(url, button) {

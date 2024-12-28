@@ -152,18 +152,18 @@ Route::post( 'mail/setting', [SettingController::class, 'mailSettingUpdate'] )->
 //Social media route
 Route::controller( SocialMediaController::class )->group( function () {
     Route::get( 'social/media', 'index' )->name( 'social.media' );
-    Route::get( 'social/media/edit/{id}', 'edit' )->name( 'social.media.edit' );
-    Route::post( 'social/media', 'addAndUpdate' )->name( 'social.media.addUpdate' );
-    Route::delete( 'social/media/{id}', 'destroy' )->name( 'social.media.destroy' );
-    Route::get( 'social/media/status/{id}', 'status' )->name( 'social.media.status' );
+    Route::get( 'social/media/edit/{id}', 'edit' )->name( 'social.media.edit');
+    Route::post( 'social/media', 'addAndUpdate' )->name( 'social.media.addUpdate');
+    Route::delete( 'social/media/{id}', 'destroy' )->name( 'social.media.destroy');
+    Route::get( 'social/media/status/{id}', 'status' )->name( 'social.media.status');
 } );
 //User Assign Permission routes
 Route::controller( PermissionAssignController::class )->group( function () {
-    Route::get( 'all/users/permissions/list', 'index' )->name( 'user.permission.index' );
-    Route::get( 'all/users/permissions/edit/{id}', 'edit' )->name( 'user.permission.edit' );
-    Route::post( 'all/users/permissions/update/{id}', 'update' )->name( 'user.permission.update' );
-    Route::post( 'add/admin/dashboard/user', 'addUser' )->name( 'admin.dashboard.user' );
-    Route::delete( 'destroy/admin/dashboard/user/{id}', 'destroy' )->name( 'destroy.dashboard.user' );
+    Route::get( 'all/users/permissions/list', 'index' )->name( 'user.permission.index');
+    Route::get( 'all/users/permissions/edit/{id}', 'edit' )->name( 'user.permission.edit');
+    Route::post( 'all/users/permissions/update/{id}', 'update' )->name( 'user.permission.update');
+    Route::post( 'add/admin/dashboard/user', 'addUser' )->name( 'admin.dashboard.user');
+    Route::delete( 'destroy/admin/dashboard/user/{id}', 'destroy' )->name( 'destroy.dashboard.user');
 } );
 
 //Job Post route

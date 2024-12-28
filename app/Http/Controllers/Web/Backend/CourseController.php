@@ -106,204 +106,7 @@ class CourseController extends Controller
         }
         return redirect()->back();
     }
-    /**
-     * Store data
-     *
-     * @param Request $request
-     */
-    // public function store(Request $request)
-    // {
-    //     //dd($request->all());
-    //     if (User::find(auth()->user()->id)->hasPermissionTo('create course')) {
-    //         //validation rules array
-    //         $rules = [
-    //             'course_title' => 'required|string|max:255|unique:courses,course_title',
-    //             'course_price' => 'required|numeric',
-    //             'summary' => 'required|string',
-    //             'course_feature_image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-    //             'module_number.*' => 'required|integer',
-    //             'module_titles.*' => 'required|string|max:255',
-    //         ];
-    //         //course module content validation rules added into rules array
-    //         foreach ($request->module_number as $key => $moduleNumber) {
-    //             $rules["module_{$moduleNumber}_content_title.*"] = 'required|string|max:255';
-    //             $rules["module_{$moduleNumber}_content_length.*"] = 'required|nullable|string|max:255';
-    //             $rules["module_{$moduleNumber}_video_file.*"] = 'nullable|mimes:mp4,avi,mkv,webm|max:51200';
-    //             $rules["module_{$moduleNumber}_files.*"] = 'nullable|mimes:mp4,avi,mkv,webm|max:51200';
-    //             $rules["module_{$moduleNumber}_files.*"] = 'nullable|file|mimes:pdf,xlsx,xls,doc,docx,mp4,avi,mkv,webm|max:51200';
-
-    //         }
-
-    //         $validation = Validator::make($request->all(), $rules);
-    //         if ($validation->validated()) {
-    //            //dd($request->all());
-    //             //dd("Hello World");
-    //             $users = User::all();
-    //             // Slug Check
-    //             $slug = Course::where('course_slug', Str::slug($request->course_title))->first();
-    //             $slug_data = '';
-
-    //             if ($slug) {
-    //                 // random string generator
-    //                 $randomString = Str::random(5);
-    //                 $slug_data = Str::slug($request->course_title) . $randomString;
-    //             } else {
-    //                 $slug_data = Str::slug($request->course_title);
-    //             }
-    //             // random string generator
-    //             $randomString = Str::random(20);
-    //             // Image store in local
-    //             $featuredImage = Helper::fileUpload($request->file('course_feature_image'), 'course', $request->course_feature_image . '_' . $randomString);
-
-    //             // VIMEO ENV SETUP
-    //             $vimeo = new Vimeo(env('VIMEO_CLIENT_ID'), env('VIMEO_CLIENT_SECRET'), env('VIMEO_ACCESS_TOKEN'));
-
-    //             // Store data in database
-    //             //  try {
-    //             DB::beginTransaction();
-
-    //             //store course
-    //             $course = new Course();
-    //             $course->course_title = $request->course_title;
-    //             $course->course_slug = $slug_data;
-    //             //$course->feature_video = $request->feature_video;
-    //             //$course->level = $request->level;
-    //             //$course->category_id = $request->category_id;
-    //             $course->course_price = $request->course_price;
-    //             $course->summary = $request->summary;
-    //             $course->course_feature_image = $featuredImage;
-    //             $course->save();
-
-    //             //store course module
-    //             foreach ($request->module_titles as $index => $title) {
-    //                 $moduleNumber = $request['module_number'][$index];
-    //                 $courseModule = new CourseModule();
-    //                 $courseModule->course_module_name = $title;
-    //                 $courseModule->course_id = $course->id;
-    //                 $courseModule->save();
-    //                 //Store module content
-    //                 foreach ($request["module_{$moduleNumber}_content_title"] as $i => $title) {
-
-    //                     //vimeo video start
-
-    //                     $moduleVideoPath = $request->file("module_{$moduleNumber}_video_url")[$i]->getPathname();
-    //                     $moduleVideoResponse = $vimeo->upload($moduleVideoPath, [
-    //                         'name' => $title,
-    //                         'description' => $request->summary,
-    //                         'privacy' => [
-    //                             'view' => 'disable'
-    //                         ],
-    //                         'embed' => [
-    //                             'title' => [
-    //                                 'name' => 'hide',
-    //                                 'owner' => 'hide',
-    //                                 'portrait' => 'hide'
-    //                             ],
-    //                             'buttons' => [
-    //                                 'like' => false,
-    //                                 'watchlater' => false,
-    //                                 'share' => false,
-    //                                 'embed'=> false
-    //                             ],
-    //                             'logos' => [
-    //                                 'vimeo' => false,
-    //                             ],
-    //                         ]
-    //                     ]);
-    //                     $moduleVideoData = $vimeo->request($moduleVideoResponse, [], 'GET')['body'];
-    //                     $moduleVideoId = trim($moduleVideoData['uri'], '/videos/');
-    //                     $moduleVideoEmbedUrl = "https://player.vimeo.com/video/" . $moduleVideoId . "?title=0&byline=0&portrait=0&badge=0&autopause=0&player_id=0&app_id=58479";
-
-    //                     $moduleVideoDuration = 0;
-    //                     $retryCount = 0;
-    //                     while ($moduleVideoDuration == 0 && $retryCount < 5) {
-    //                         sleep(5);
-    //                         $moduleVideoData = $vimeo->request($moduleVideoResponse, [], 'GET')['body'];
-    //                         $moduleVideoDuration = $moduleVideoData['duration'];
-    //                         $retryCount++;
-    //                     }
-    //                     //all content length store a array
-    //                     $contentLengthArray[] = $request["module_{$moduleNumber}_content_length"][$i];
-
-    //                     $courseContent = new CourseContent();
-    //                     $courseContent->content_title = $title;
-    //                     $courseContent->video_url = $moduleVideoEmbedUrl;
-    //                     $courseContent->content_length = $request["module_{$moduleNumber}_content_length"][$i];
-    //                     // Handle video file upload if exists
-    //                     // if ($request->hasFile("module_{$moduleNumber}_video_file") && $request->file("module_{$moduleNumber}_video_file")[$i]) {
-    //                     //     $videoFile = $request->file("module_{$moduleNumber}_video_file")[$i];
-    //                     //     $videoFileName = $randomString . '_' . time() . '.' . $videoFile->getClientOriginalExtension();
-    //                     //     $courseContent->video_file = Helper::fileUpload($videoFile, 'videos', $videoFileName);
-    //                     // }
-    //                     //$courseContent->video_file = $request["module_{$moduleNumber}_video_file"][$i];
-    //                     $courseContent->course_id = $course->id;
-    //                     $courseContent->course_module_id = $courseModule->id;
-    //                     $courseContent->save();
-
-    //                     //dd($request["module_{$moduleNumber}_files"]);
-    //                     // Handle multiple file uploads (PDFs, Excel files)
-    //                     if ($request->hasFile("module_{$moduleNumber}_files") && isset($request["module_{$moduleNumber}_files"])) {
-    //                         $files = $request->file("module_{$moduleNumber}_files"); // Multiple files
-    //                         //dd($files);
-
-    //                         if (is_array($files)) {
-    //                             foreach ($files as $fileindex => $file) {
-    //                                 if ($file->isValid()) {
-    //                                     $randomString = Str::random(20);
-    //                                     $fileExtension = $file->getClientOriginalExtension();
-    //                                     $fileName = $randomString . '_' . Str::uuid() . '.' . $fileExtension;
-    //                                     $filePath = Helper::fileUpload($file, 'course_files', $fileName);
-
-    //                                     // Store file in the `course_content_files` table
-    //                                     CourseContentFile::create([
-    //                                         'course_content_id' => $courseContent->id,
-    //                                         'file_path' => $filePath,
-    //                                         'file_type' => $fileExtension, // PDF, Excel, etc.
-    //                                     ]);
-    //                                 }
-    //                             }
-    //                         } else {
-    //                             // Handle a single file
-    //                             $file = $files;
-    //                             if ($file->isValid()) {
-    //                                 $fileExtension = $file->getClientOriginalExtension();
-    //                                 $fileName = $randomString . '_' . time() . '.' . $fileExtension;
-    //                                 $filePath = Helper::fileUpload($file, 'course_files', $fileName);
-
-    //                                 // Store file in the `course_content_files` table
-    //                                 CourseContentFile::create([
-    //                                     'course_content_id' => $courseContent->id,
-    //                                     'file_path' => $filePath,
-    //                                     'file_type' => $fileExtension, // PDF, Excel, etc.
-    //                                 ]);
-    //                             }
-    //                         }
-    //                     }
-    //                 }
-    //             }
-    //             //course content length array summing
-    //             $courseDuration = Helper::addDurationsArray($contentLengthArray);
-    //             //course duration updated
-    //             $course->update(['duration' => $courseDuration]);
-    //             foreach ($users as $user) {
-    //                 if ($user->id != Auth::user()->id && 2 == $user->user_type) {
-    //                     $user->notify(new UserNotification('Admin: Release New Course', " $course->course_title", route('course.enrollment', $course->id)));
-    //                 }
-    //             }
-    //             DB::commit();
-    //             return redirect(route('course.index'))->with('t-success', 'Course added successfully.');
-
-    //             // } /*catch ( Exception $e ) {
-    //             //     DB::rollBack();
-    //             //     return redirect( route( 'course.create' ) )->with( 't-error', 'Something Went Wrong' );
-    //             // }*/
-    //         } else {
-    //             //dd($validation->errors());
-    //             return $validation->errors();
-    //         }
-    //     }
-    //     return redirect()->back();
-    // }
+  
     /**
      * Get Selected item data
      *
@@ -454,22 +257,6 @@ class CourseController extends Controller
                                     ]);
                                 }
                             }
-                            //} else {
-                            // Handle a single file
-                            // $file = $files;
-                            // if ($file->isValid()) {
-                            //     $fileExtension = $file->getClientOriginalExtension();
-                            //     $fileName = $randomString . '_' . time() . '.' . $fileExtension;
-                            //     $filePath = Helper::fileUpload($file, 'course_files', $fileName);
-
-                            // Store file in the `course_content_files` table
-                            // CourseContentFile::create([
-                            //     'course_content_id' => $courseContent->id,
-                            //     'file_path' => $filePath,
-                            //     'file_type' => $fileExtension, // PDF, Excel, etc.
-                            // ]);
-                            //}
-                            //}
                         }
                     }
                 }
@@ -527,7 +314,7 @@ class CourseController extends Controller
                 'summary' => 'required|string',
                 'course_feature_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
                 'course_pdf.*.*' => 'nullable|file|mimes:pdf|max:10000',
-                'ai_name' => 'required|string|exists:courses,ai_name',
+                'ai_name' => 'required|string',
                 'ai_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
                 'ai_url' => 'nullable|string',
                 'ai_description' => 'nullable|string',
@@ -685,7 +472,6 @@ class CourseController extends Controller
                                 }
                             }
                         }
-
                         //end
                     }
                 }
@@ -697,6 +483,35 @@ class CourseController extends Controller
             }
         }
         return redirect()->back();
+    }
+
+
+    public function fileDelete($id){
+        // dd($id);  
+        if(isset($id)){
+            try{
+                $file = CourseContentFile::find($id);
+    
+            if ($file->file_path != null) {
+                // Remove image
+                if (File::exists($file->file_path)) {
+                    File::delete($file->file_path);
+                }
+                
+            }
+                $file->delete();
+    
+            // dd($file->id);
+            return redirect()->back()->with('t-success','Successfully deleted the file.');
+            }
+            catch(Exception $e){
+                return redirect(route('course.index'))->with('t-error','Find problem to delete the file.');
+            }
+        }  
+        else{
+            return redirect(route('course.index'))->with('t-error','File not exist.');
+        }
+        
     }
 
     /**
@@ -768,41 +583,7 @@ class CourseController extends Controller
      * @param Request $request
      * @param $id
      */
-    // public function moduleDestroy(Request $request)
-    // {
-    //     if (User::find(auth()->user()->id)->hasPermissionTo('delete course')) {
-    //         //try {
-    //             if ($request->ajax()) {
-    //                 DB::beginTransaction();
-    //                 $contents = CourseContent::where(['course_id' => $request->course_id, 'course_module_id' => $request->module_id])->get();
-    //                 foreach ($contents as $content) {
-    //                     $contentLengthArray[] = $content['content_length'];
-    //                     $content->delete();
-    //                 }
-    //                 $courseDuration = Helper::addDurationsArray($contentLengthArray);
-    //                 $course = Course::where('id', $request->course_id)->first();
-
-    //                 $updateDuration = Helper::subtractDuration($course->duration, $courseDuration);
-    //                 $course->update(['duration' => $updateDuration]);
-
-    //                 CourseModule::where(['course_id' => $request->course_id, 'id' => $request->module_id])->delete();
-    //                 DB::commit();
-    //                 return response()->json([
-    //                     'success' => true,
-    //                     'message' => 'Module Deleted Successfully.',
-    //                 ]);
-    //             }
-    //         //} catch (Exception $th) {
-    //             DB::rollBack();
-    //             return response()->json([
-    //                 'success' => false,
-    //                 'message' => 'Something went wrong',
-    //             ]);
-    //        // }
-    //     }
-    //     return redirect()->back();
-    // }
-
+   
     public function moduleDestroy(Request $request)
     {
         if (User::find(auth()->user()->id)->hasPermissionTo('delete course')) {
